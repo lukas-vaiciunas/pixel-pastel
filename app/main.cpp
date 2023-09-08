@@ -3,6 +3,10 @@
 
 int main(void)
 {
+#ifdef _DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
+	
 	const sf::Color clearColor = sf::Color(255, 0, 255);
 
 	sf::RenderWindow window(
