@@ -8,7 +8,7 @@ Brush::Brush() :
 {}
 
 void Brush::updateOnMouseMove(
-	const sf::Vector2i &mousePosition,
+	int mouseX, int mouseY,
 	Canvas &canvas,
 	const sf::Vector2f &cameraPosition,
 	float cameraZoom)
@@ -16,8 +16,8 @@ void Brush::updateOnMouseMove(
 	const sf::Vector2u &canvasSize = canvas.getSize();
 
 	const sf::Vector2f mouseRelativePosition(
-		mousePosition.x / cameraZoom + cameraPosition.x,
-		mousePosition.y / cameraZoom + cameraPosition.y);
+		mouseX / cameraZoom + cameraPosition.x,
+		mouseY / cameraZoom + cameraPosition.y);
 
 	isInBounds_ = mouseRelativePosition.x >= 0.0f
 		&& mouseRelativePosition.x < canvasSize.x

@@ -38,6 +38,8 @@ int main(void)
 			(canvasSize.x - windowWidth / camera.getZoom()) * 0.5f,
 			(canvasSize.y - windowHeight / camera.getZoom()) * 0.5f));
 
+	sf::Vector2i lastMousePosition(0, 0);
+
 	while (window.isOpen())
 	{
 		sf::Event ev;
@@ -47,18 +49,34 @@ int main(void)
 			switch (ev.type)
 			{
 				case sf::Event::MouseMoved:
+					camera.updateOnMouseMove(
+						ev.mouseMove.x - lastMousePosition.x,
+						ev.mouseMove.y - lastMousePosition.y);
+
 					brush.updateOnMouseMove(
-						sf::Vector2i(ev.mouseMove.x, ev.mouseMove.y),
+						ev.mouseMove.x, ev.mouseMove.y,
 						canvas,
 						camera.getPosition(),
 						camera.getZoom());
+
+					lastMousePosition.x = ev.mouseMove.x;
+					lastMousePosition.y = ev.mouseMove.y;
+					break;
+				case sf::Event::MouseWheelScrolled:
+					camera.updateOnMouseWheelScroll(
+						ev.mouseWheelScroll.delta,
+						ev.mouseWheelScroll.x, ev.mouseWheelScroll.y);
 					break;
 				case sf::Event::MouseButtonPressed:
+					camera.updateOnMouseButtonPress(ev.mouseButton.button);
+
 					brush.updateOnMouseButtonPress(
 						ev.mouseButton.button,
 						canvas);
 					break;
 				case sf::Event::MouseButtonReleased:
+					camera.updateOnMouseButtonRelease(ev.mouseButton.button);
+
 					brush.updateOnMouseButtonRelease(ev.mouseButton.button);
 					break;
 				case sf::Event::EventType::Closed:

@@ -11,7 +11,7 @@ public:
 	Brush();
 
 	void updateOnMouseMove(
-		const sf::Vector2i &mousePosition,
+		int mouseX, int mouseY,
 		Canvas &canvas,
 		const sf::Vector2f &cameraPosition,
 		float cameraZoom);
