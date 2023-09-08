@@ -1,5 +1,6 @@
 #include "Canvas.h"
 #include "Brush.h"
+#include "Camera.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
 
@@ -10,20 +11,32 @@ int main(void)
 #endif
 	
 	const sf::Color clearColor = sf::Color(255, 0, 255);
+	const unsigned int windowWidth = 1600;
+	const unsigned int windowHeight = 900;
 
 	sf::RenderWindow window(
-		sf::VideoMode(1600, 900, 32),
+		sf::VideoMode(windowWidth, windowHeight, 32),
 		"Pixel Pastel",
 		sf::Style::Titlebar | sf::Style::Close);
 
 	window.setFramerateLimit(60);
 	window.setKeyRepeatEnabled(false);
 
-	const sf::Vector2f cameraPosition(-32.0f, -12.0f);
-	const float cameraZoom = 16.0f;
-
 	Canvas canvas(sf::Vector2u(32, 32));
 	Brush brush;
+	Camera camera;
+
+	const sf::Vector2u &canvasSize = canvas.getSize();
+
+	camera.setZoom(
+		std::fminf(
+			windowWidth / static_cast<float>(canvasSize.x),
+			windowHeight / static_cast<float>(canvasSize.y)) * 0.75f);
+
+	camera.setPosition(
+		sf::Vector2f(
+			(canvasSize.x - windowWidth / camera.getZoom()) * 0.5f,
+			(canvasSize.y - windowHeight / camera.getZoom()) * 0.5f));
 
 	while (window.isOpen())
 	{
@@ -37,8 +50,8 @@ int main(void)
 					brush.updateOnMouseMove(
 						sf::Vector2i(ev.mouseMove.x, ev.mouseMove.y),
 						canvas,
-						cameraPosition,
-						cameraZoom);
+						camera.getPosition(),
+						camera.getZoom());
 					break;
 				case sf::Event::MouseButtonPressed:
 					brush.updateOnMouseButtonPress(
@@ -54,9 +67,11 @@ int main(void)
 			}
 		}
 
+		const float cameraZoom = camera.getZoom();
+
 		sf::Transform transform;
 		transform.scale(sf::Vector2f(cameraZoom, cameraZoom));
-		transform.translate(-cameraPosition);
+		transform.translate(-camera.getPosition());
 
 		window.clear(clearColor);
 		window.draw(canvas, transform);
