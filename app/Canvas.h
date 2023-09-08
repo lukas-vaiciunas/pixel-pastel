@@ -14,6 +14,8 @@ public:
 	void setColor(
 		const sf::Vector2u &position,
 		const sf::Color &color);
+
+	const sf::Vector2u &getSize() const;
 private:
 	sf::VertexArray vertices_;
 	sf::Vector2u size_;

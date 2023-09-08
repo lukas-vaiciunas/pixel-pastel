@@ -23,10 +23,20 @@ void Canvas::setColor(
 	const unsigned int width = size_.x * 6;
 	const unsigned int base = position.x * 6 + position.y * width;
 
+	if (vertices_[base].color == color)
+	{
+		return;
+	}
+
 	for (unsigned int i = base; i < base + 6; ++i)
 	{
 		vertices_[i].color = color;
 	}
+}
+
+const sf::Vector2u &Canvas::getSize() const
+{
+	return size_;
 }
 
 void Canvas::init_()

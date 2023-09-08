@@ -1,4 +1,5 @@
 #include "Canvas.h"
+#include "Brush.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
 
@@ -18,13 +19,11 @@ int main(void)
 	window.setFramerateLimit(60);
 	window.setKeyRepeatEnabled(false);
 
+	const sf::Vector2f cameraPosition(-32.0f, -12.0f);
+	const float cameraZoom = 16.0f;
+
 	Canvas canvas(sf::Vector2u(32, 32));
-	canvas.setColor(sf::Vector2u(1, 1), sf::Color(0, 0, 0));
-	canvas.setColor(sf::Vector2u(2, 2), sf::Color(0, 0, 0));
-	canvas.setColor(sf::Vector2u(3, 3), sf::Color(0, 0, 0));
-	canvas.setColor(sf::Vector2u(4, 4), sf::Color(0, 0, 0));
-	canvas.setColor(sf::Vector2u(5, 5), sf::Color(0, 0, 0));
-	canvas.setColor(sf::Vector2u(6, 6), sf::Color(0, 0, 0));
+	Brush brush;
 
 	while (window.isOpen())
 	{
@@ -32,15 +31,32 @@ int main(void)
 
 		while (window.pollEvent(ev))
 		{
-			if (ev.type == sf::Event::EventType::Closed)
+			switch (ev.type)
 			{
-				window.close();
+				case sf::Event::MouseMoved:
+					brush.updateOnMouseMove(
+						sf::Vector2i(ev.mouseMove.x, ev.mouseMove.y),
+						canvas,
+						cameraPosition,
+						cameraZoom);
+					break;
+				case sf::Event::MouseButtonPressed:
+					brush.updateOnMouseButtonPress(
+						ev.mouseButton.button,
+						canvas);
+					break;
+				case sf::Event::MouseButtonReleased:
+					brush.updateOnMouseButtonRelease(ev.mouseButton.button);
+					break;
+				case sf::Event::EventType::Closed:
+					window.close();
+					break;
 			}
 		}
 
 		sf::Transform transform;
-		transform.scale(sf::Vector2f(16.0f, 16.0f));
-		transform.translate(sf::Vector2f(32.0f, 12.0f));
+		transform.scale(sf::Vector2f(cameraZoom, cameraZoom));
+		transform.translate(-cameraPosition);
 
 		window.clear(clearColor);
 		window.draw(canvas, transform);
