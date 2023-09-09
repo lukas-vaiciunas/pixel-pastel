@@ -4,6 +4,7 @@
 Canvas::Canvas(const sf::Vector2u &size) :
 	sf::Drawable(),
 	vertices_(sf::PrimitiveType::Triangles),
+	outlineVertices_(sf::PrimitiveType::Triangles),
 	size_(size)
 {
 	this->init_();
@@ -13,6 +14,7 @@ void Canvas::draw(
 	sf::RenderTarget &target,
 	sf::RenderStates states) const
 {
+	target.draw(outlineVertices_, states);
 	target.draw(vertices_, states);
 }
 
@@ -90,4 +92,188 @@ void Canvas::init_()
 					fillColor));
 		}
 	}
+
+	this->initOutline_();
+}
+
+void Canvas::initOutline_()
+{
+	const sf::Color color(0, 0, 0);
+	const float thickness = 1.0f;
+	
+	// Top
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				-thickness,
+				-thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				size_.x + thickness,
+				-thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				-thickness,
+				thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				-thickness,
+				thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				size_.x + thickness,
+				-thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				size_.x + thickness,
+				thickness),
+			color));
+
+	// Bottom
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				-thickness,
+				size_.y - thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				size_.x + thickness,
+				size_.y - thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				-thickness,
+				size_.y + thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				-thickness,
+				size_.y + thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				size_.x + thickness,
+				size_.y - thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				size_.x + thickness,
+				size_.y + thickness),
+			color));
+
+	// Left
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				-thickness,
+				thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				-thickness,
+				size_.y - thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				thickness,
+				thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				thickness,
+				thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				-thickness,
+				size_.y - thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				thickness,
+				size_.y - thickness),
+			color));
+
+	// Right
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				size_.x - thickness,
+				thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				size_.x - thickness,
+				size_.y - thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				size_.x + thickness,
+				thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				size_.x + thickness,
+				thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				size_.x - thickness,
+				size_.y - thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				size_.x + thickness,
+				size_.y - thickness),
+			color));
 }

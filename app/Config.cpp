@@ -11,6 +11,6 @@ namespace Config
 
 	namespace Interface
 	{
-		float scale = 2.0f;
+		float scale = 1.0f;
 	}
 }

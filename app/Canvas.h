@@ -18,7 +18,10 @@ public:
 	const sf::Vector2u &getSize() const;
 private:
 	sf::VertexArray vertices_;
+	sf::VertexArray outlineVertices_;
+
 	sf::Vector2u size_;
 
 	void init_();
+	void initOutline_();
 };
