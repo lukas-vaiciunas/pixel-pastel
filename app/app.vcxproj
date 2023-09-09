@@ -136,6 +136,7 @@
     <ClCompile Include="EventQueue.cpp" />
     <ClCompile Include="Listener.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Palette.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brush.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="EventQueue.h" />
     <ClInclude Include="EventType.h" />
     <ClInclude Include="Listener.h" />
+    <ClInclude Include="Palette.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

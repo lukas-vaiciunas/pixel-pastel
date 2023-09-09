@@ -1,5 +1,6 @@
 #include "Canvas.h"
 #include "Brush.h"
+#include "Palette.h"
 #include "Camera.h"
 #include "EventQueue.h"
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -14,6 +15,7 @@ int main(void)
 	const sf::Color clearColor = sf::Color(255, 0, 255);
 	const unsigned int windowWidth = 1600;
 	const unsigned int windowHeight = 900;
+	const float interfaceScale = 32.0f;
 
 	sf::RenderWindow window(
 		sf::VideoMode(windowWidth, windowHeight, 32),
@@ -25,7 +27,10 @@ int main(void)
 
 	Canvas canvas(sf::Vector2u(32, 32));
 	Brush brush;
+	Palette palette;
 	Camera camera;
+
+	palette.load("./palettes/pico-8.txt");
 
 	const sf::Vector2u &canvasSize = canvas.getSize();
 
@@ -74,6 +79,11 @@ int main(void)
 					brush.updateOnMouseButtonPress(
 						ev.mouseButton.button,
 						canvas);
+
+					palette.updateOnMousePress(
+						ev.mouseButton.button,
+						ev.mouseButton.x, ev.mouseButton.y,
+						interfaceScale);
 					break;
 				case sf::Event::MouseButtonReleased:
 					camera.updateOnMouseButtonRelease(ev.mouseButton.button);
@@ -90,12 +100,16 @@ int main(void)
 
 		const float cameraZoom = camera.getZoom();
 
-		sf::Transform transform;
-		transform.scale(sf::Vector2f(cameraZoom, cameraZoom));
-		transform.translate(-camera.getPosition());
+		sf::Transform cameraTransform;
+		cameraTransform.scale(sf::Vector2f(cameraZoom, cameraZoom));
+		cameraTransform.translate(-camera.getPosition());
+
+		sf::Transform interfaceTransform;
+		interfaceTransform.scale(sf::Vector2f(interfaceScale, interfaceScale));
 
 		window.clear(clearColor);
-		window.draw(canvas, transform);
+		window.draw(canvas, cameraTransform);
+		window.draw(palette, interfaceTransform);
 		window.display();
 	}
 
