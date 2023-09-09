@@ -133,12 +133,18 @@
     <ClCompile Include="Brush.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
+    <ClCompile Include="EventQueue.cpp" />
+    <ClCompile Include="Listener.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brush.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Canvas.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventQueue.h" />
+    <ClInclude Include="EventType.h" />
+    <ClInclude Include="Listener.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

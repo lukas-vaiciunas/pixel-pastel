@@ -2,13 +2,16 @@
 
 class Canvas;
 
+#include "Listener.h"
 #include <SFML/Window/Mouse.hpp>
 #include <SFML/Graphics/Color.hpp>
 
-class Brush
+class Brush : public Listener
 {
 public:
 	Brush();
+
+	void onEvent(const Event &ev) override;
 
 	void updateOnMouseMove(
 		int mouseX, int mouseY,

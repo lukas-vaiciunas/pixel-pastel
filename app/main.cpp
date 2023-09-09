@@ -1,6 +1,7 @@
 #include "Canvas.h"
 #include "Brush.h"
 #include "Camera.h"
+#include "EventQueue.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
 
@@ -84,6 +85,8 @@ int main(void)
 					break;
 			}
 		}
+
+		EventQueue::getInstance().dispatch();
 
 		const float cameraZoom = camera.getZoom();
 

@@ -1,11 +1,18 @@
 #include "Brush.h"
 #include "Canvas.h"
+#include "Event.h"
 
 Brush::Brush() :
+	Listener({ EventType::SetBrushColor }),
 	color_(0, 0, 0),
 	isInBounds_(false),
 	isPainting_(false)
 {}
+
+void Brush::onEvent(const Event &ev)
+{
+	color_ = static_cast<const EventSetBrushColor &>(ev).getColor();
+}
 
 void Brush::updateOnMouseMove(
 	int mouseX, int mouseY,
