@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics/VertexArray.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 class Canvas : public sf::Drawable
 {
@@ -19,7 +20,10 @@ public:
 	unsigned int getCellSize() const;
 private:
 	sf::VertexArray vertices_;
+	sf::VertexArray transparencyVertices_;
 	sf::VertexArray outlineVertices_;
+
+	sf::Texture transparencyTexture_;
 
 	sf::Vector2u size_;
 
@@ -27,4 +31,10 @@ private:
 
 	void init_();
 	void initOutline_();
+
+	void addQuad(
+		sf::VertexArray &vertices,
+		const sf::Vector2f &minPosition,
+		const sf::Vector2f &maxPosition,
+		const sf::Color &color);
 };
