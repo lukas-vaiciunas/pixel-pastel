@@ -3,9 +3,10 @@
 
 Canvas::Canvas(const sf::Vector2u &size) :
 	sf::Drawable(),
-	vertices_(sf::PrimitiveType::Triangles),
-	transparencyVertices_(sf::PrimitiveType::Triangles),
 	outlineVertices_(sf::PrimitiveType::Triangles),
+	transparencyVertices_(sf::PrimitiveType::Triangles),
+	vertices_(sf::PrimitiveType::Triangles),
+	gridVertices_(sf::PrimitiveType::Triangles),
 	transparencyTexture_(),
 	size_(size),
 	cellSize_(8)
@@ -28,6 +29,7 @@ void Canvas::draw(
 	target.draw(outlineVertices_, states);
 	target.draw(transparencyVertices_, transparencyStates);
 	target.draw(vertices_, states);
+	target.draw(gridVertices_, states);
 }
 
 void Canvas::erase(const sf::Vector2u &position)
@@ -67,6 +69,9 @@ unsigned int Canvas::getCellSize() const
 
 void Canvas::init_()
 {
+	vertices_.clear();
+	transparencyVertices_.clear();
+
 	const sf::Color fillColor = sf::Color(255, 255, 255, 0);
 
 	for (unsigned int y = 0; y < size_.y; ++y)
@@ -79,7 +84,7 @@ void Canvas::init_()
 				x * cellSize,
 				y * cellSize);
 
-			this->addQuad(
+			this->addQuad_(
 				vertices_,
 				position,
 				sf::Vector2f(position.x + cellSize, position.y + cellSize),
@@ -132,10 +137,13 @@ void Canvas::init_()
 	}
 
 	this->initOutline_();
+	this->initGrid_();
 }
 
 void Canvas::initOutline_()
 {
+	outlineVertices_.clear();
+
 	const sf::Color color(0, 0, 0);
 	const float thickness = 1.0f;
 	unsigned int width = size_.x * cellSize_;
@@ -143,7 +151,7 @@ void Canvas::initOutline_()
 	
 	// Top
 
-	this->addQuad(
+	this->addQuad_(
 		outlineVertices_,
 		sf::Vector2f(-thickness, -thickness),
 		sf::Vector2f(width + thickness, thickness),
@@ -151,7 +159,7 @@ void Canvas::initOutline_()
 
 	// Bottom
 
-	this->addQuad(
+	this->addQuad_(
 		outlineVertices_,
 		sf::Vector2f(-thickness, height - thickness),
 		sf::Vector2f(width + thickness, height + thickness),
@@ -159,7 +167,7 @@ void Canvas::initOutline_()
 
 	// Left
 
-	this->addQuad(
+	this->addQuad_(
 		outlineVertices_,
 		sf::Vector2f(-thickness, thickness),
 		sf::Vector2f(thickness, height - thickness),
@@ -167,14 +175,55 @@ void Canvas::initOutline_()
 
 	// Right
 
-	this->addQuad(
+	this->addQuad_(
 		outlineVertices_,
 		sf::Vector2f(width - thickness, thickness),
 		sf::Vector2f(width + thickness, height - thickness),
 		color);
 }
 
-void Canvas::addQuad(
+void Canvas::initGrid_()
+{
+	gridVertices_.clear();
+
+	const sf::Color fillColor(0, 0, 0);
+	const float thickness = 1.0f;
+	const float halfThickness = thickness * 0.5f;
+	const unsigned int cellWidth = 1;
+	const unsigned int cellHeight = 1;
+
+	sf::Vector2f gridPixelSize(
+		static_cast<float>(size_.x * cellSize_),
+		static_cast<float>(size_.y * cellSize_));
+
+	for (unsigned int x = cellWidth; x < size_.x; x += cellWidth)
+	{
+		this->addQuad_(
+			gridVertices_,
+			sf::Vector2f(
+				x * cellSize_ - halfThickness,
+				0.0f),
+			sf::Vector2f(
+				x * cellSize_ + halfThickness,
+				gridPixelSize.y),
+			fillColor);
+	}
+
+	for (unsigned int y = cellHeight; y < size_.y; y += cellHeight)
+	{
+		this->addQuad_(
+			gridVertices_,
+			sf::Vector2f(
+				0.0f,
+				y * cellSize_ - halfThickness),
+			sf::Vector2f(
+				gridPixelSize.x,
+				y * cellSize_ + halfThickness),
+			fillColor);
+	}
+}
+
+void Canvas::addQuad_(
 	sf::VertexArray &vertices,
 	const sf::Vector2f &minPosition,
 	const sf::Vector2f &maxPosition,

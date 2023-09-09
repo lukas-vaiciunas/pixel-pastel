@@ -21,9 +21,10 @@ public:
 	const sf::Vector2u &getSize() const;
 	unsigned int getCellSize() const;
 private:
-	sf::VertexArray vertices_;
-	sf::VertexArray transparencyVertices_;
 	sf::VertexArray outlineVertices_;
+	sf::VertexArray transparencyVertices_;
+	sf::VertexArray vertices_;
+	sf::VertexArray gridVertices_;
 
 	sf::Texture transparencyTexture_;
 
@@ -33,8 +34,9 @@ private:
 
 	void init_();
 	void initOutline_();
+	void initGrid_();
 
-	void addQuad(
+	void addQuad_(
 		sf::VertexArray &vertices,
 		const sf::Vector2f &minPosition,
 		const sf::Vector2f &maxPosition,
