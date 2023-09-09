@@ -11,8 +11,7 @@ public:
 
 	void updateOnMousePress(
 		sf::Mouse::Button button,
-		int mouseX, int mouseY,
-		float interfaceScale);
+		int mouseX, int mouseY);
 
 	void load(const std::string &string);
 
@@ -23,4 +22,5 @@ private:
 	sf::VertexArray vertices_;
 
 	unsigned int numCols_;
+	unsigned int boxSize_;
 };

@@ -3,6 +3,7 @@
 #include "Palette.h"
 #include "Camera.h"
 #include "EventQueue.h"
+#include "Config.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
 
@@ -12,13 +13,13 @@ int main(void)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 	
-	const sf::Color clearColor = sf::Color(255, 0, 255);
-	const unsigned int windowWidth = 1600;
-	const unsigned int windowHeight = 900;
-	const float interfaceScale = 32.0f;
+	const sf::Color clearColor = sf::Color(224, 203, 188);
 
 	sf::RenderWindow window(
-		sf::VideoMode(windowWidth, windowHeight, 32),
+		sf::VideoMode(
+			Config::Window::width,
+			Config::Window::height,
+			Config::Window::bitsPerPixel),
 		"Pixel Pastel",
 		sf::Style::Titlebar | sf::Style::Close);
 
@@ -36,13 +37,13 @@ int main(void)
 
 	camera.setZoom(
 		std::fminf(
-			windowWidth / static_cast<float>(canvasSize.x),
-			windowHeight / static_cast<float>(canvasSize.y)) * 0.75f);
+			Config::Window::width / static_cast<float>(canvasSize.x),
+			Config::Window::height / static_cast<float>(canvasSize.y)) * 0.75f);
 
 	camera.setPosition(
 		sf::Vector2f(
-			(canvasSize.x - windowWidth / camera.getZoom()) * 0.5f,
-			(canvasSize.y - windowHeight / camera.getZoom()) * 0.5f));
+			(canvasSize.x - Config::Window::width / camera.getZoom()) * 0.5f,
+			(canvasSize.y - Config::Window::height / camera.getZoom()) * 0.5f));
 
 	sf::Vector2i lastMousePosition(0, 0);
 
@@ -82,8 +83,7 @@ int main(void)
 
 					palette.updateOnMousePress(
 						ev.mouseButton.button,
-						ev.mouseButton.x, ev.mouseButton.y,
-						interfaceScale);
+						ev.mouseButton.x, ev.mouseButton.y);
 					break;
 				case sf::Event::MouseButtonReleased:
 					camera.updateOnMouseButtonRelease(ev.mouseButton.button);
@@ -105,7 +105,10 @@ int main(void)
 		cameraTransform.translate(-camera.getPosition());
 
 		sf::Transform interfaceTransform;
-		interfaceTransform.scale(sf::Vector2f(interfaceScale, interfaceScale));
+		interfaceTransform.scale(
+			sf::Vector2f(
+				Config::Interface::scale,
+				Config::Interface::scale));
 
 		window.clear(clearColor);
 		window.draw(canvas, cameraTransform);

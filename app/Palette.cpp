@@ -2,26 +2,27 @@
 #include "Event.h"
 #include "EventQueue.h"
 #include <SFML/Graphics/RenderTarget.hpp>
+#include "Config.h"
 #include <fstream>
 #include <sstream>
 
 Palette::Palette() :
 	sf::Drawable(),
 	vertices_(sf::Triangles),
-	numCols_(0)
+	numCols_(0),
+	boxSize_(32)
 {}
 
 void Palette::updateOnMousePress(
 	sf::Mouse::Button button,
-	int mouseX, int mouseY,
-	float interfaceScale)
+	int mouseX, int mouseY)
 {
 	if (button != sf::Mouse::Button::Left)
 	{
 		return;
 	}
 
-	float invInterfaceScale = 1.0f / interfaceScale;
+	float invInterfaceScale = 1.0f / Config::Interface::scale;
 
 	const sf::Vector2f relativeMousePosition(
 		mouseX * invInterfaceScale,
@@ -38,8 +39,8 @@ void Palette::updateOnMousePress(
 	}
 
 	sf::Vector2u palettePosition(
-		static_cast<unsigned int>(relativeMousePosition.x),
-		static_cast<unsigned int>(relativeMousePosition.y));
+		static_cast<unsigned int>(relativeMousePosition.x / boxSize_),
+		static_cast<unsigned int>(relativeMousePosition.y / boxSize_));
 
 	unsigned int width = numCols_ * 6;
 
@@ -83,46 +84,50 @@ void Palette::load(const std::string &string)
 
 		const sf::Color color(r, g, b);
 
+		const sf::Vector2f position(
+			static_cast<float>(col * boxSize_),
+			static_cast<float>(row * boxSize_));
+
 		vertices_.append(
 			sf::Vertex(
 				sf::Vector2f(
-					static_cast<float>(col),
-					static_cast<float>(row)),
+					position.x,
+					position.y),
 				color));
 
 		vertices_.append(
 			sf::Vertex(
 				sf::Vector2f(
-					static_cast<float>(col + 1),
-					static_cast<float>(row)),
+					position.x + boxSize_,
+					position.y),
 				color));
 
 		vertices_.append(
 			sf::Vertex(
 				sf::Vector2f(
-					static_cast<float>(col),
-					static_cast<float>(row + 1)),
+					position.x,
+					position.y + boxSize_),
 				color));
 
 		vertices_.append(
 			sf::Vertex(
 				sf::Vector2f(
-					static_cast<float>(col),
-					static_cast<float>(row + 1)),
+					position.x,
+					position.y + boxSize_),
 				color));
 
 		vertices_.append(
 			sf::Vertex(
 				sf::Vector2f(
-					static_cast<float>(col + 1),
-					static_cast<float>(row)),
+					position.x + boxSize_,
+					position.y),
 				color));
 
 		vertices_.append(
 			sf::Vertex(
 				sf::Vector2f(
-					static_cast<float>(col + 1),
-					static_cast<float>(row + 1)),
+					position.x + boxSize_,
+					position.y + boxSize_),
 				color));
 
 		if (++col >= numCols_)
