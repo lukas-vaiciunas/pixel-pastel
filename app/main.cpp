@@ -33,17 +33,17 @@ int main(void)
 
 	palette.load("./palettes/pico-8.txt");
 
-	const sf::Vector2u &canvasSize = canvas.getSize();
+	const sf::Vector2u canvasPixelSize = canvas.getSize() * canvas.getCellSize();
 
 	camera.setZoom(
 		std::fminf(
-			Config::Window::width / static_cast<float>(canvasSize.x),
-			Config::Window::height / static_cast<float>(canvasSize.y)) * 0.75f);
+			Config::Window::width / static_cast<float>(canvasPixelSize.x),
+			Config::Window::height / static_cast<float>(canvasPixelSize.y)) * 0.75f);
 
 	camera.setPosition(
 		sf::Vector2f(
-			(canvasSize.x - Config::Window::width / camera.getZoom()) * 0.5f,
-			(canvasSize.y - Config::Window::height / camera.getZoom()) * 0.5f));
+			(canvasPixelSize.x - Config::Window::width / camera.getZoom()) * 0.5f,
+			(canvasPixelSize.y - Config::Window::height / camera.getZoom()) * 0.5f));
 
 	sf::Vector2i lastMousePosition(0, 0);
 

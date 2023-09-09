@@ -5,7 +5,8 @@ Canvas::Canvas(const sf::Vector2u &size) :
 	sf::Drawable(),
 	vertices_(sf::PrimitiveType::Triangles),
 	outlineVertices_(sf::PrimitiveType::Triangles),
-	size_(size)
+	size_(size),
+	cellSize_(8)
 {
 	this->init_();
 }
@@ -41,6 +42,11 @@ const sf::Vector2u &Canvas::getSize() const
 	return size_;
 }
 
+unsigned int Canvas::getCellSize() const
+{
+	return cellSize_;
+}
+
 void Canvas::init_()
 {
 	const sf::Color fillColor = sf::Color(255, 255, 255);
@@ -49,46 +55,50 @@ void Canvas::init_()
 	{
 		for (unsigned int x = 0; x < size_.x; ++x)
 		{
+			const sf::Vector2f position(
+				static_cast<float>(x * cellSize_),
+				static_cast<float>(y * cellSize_));
+
 			vertices_.append(
 				sf::Vertex(
 					sf::Vector2f(
-						static_cast<float>(x),
-						static_cast<float>(y)),
+						position.x,
+						position.y),
 					fillColor));
 			
 			vertices_.append(
 				sf::Vertex(
 					sf::Vector2f(
-						static_cast<float>(x + 1),
-						static_cast<float>(y)),
+						position.x + cellSize_,
+						position.y),
 					fillColor));
 			
 			vertices_.append(
 				sf::Vertex(
 					sf::Vector2f(
-						static_cast<float>(x),
-						static_cast<float>(y + 1)),
+						position.x,
+						position.y + cellSize_),
 					fillColor));
 			
 			vertices_.append(
 				sf::Vertex(
 					sf::Vector2f(
-						static_cast<float>(x),
-						static_cast<float>(y + 1)),
+						position.x,
+						position.y + cellSize_),
 					fillColor));
 			
 			vertices_.append(
 				sf::Vertex(
 					sf::Vector2f(
-						static_cast<float>(x + 1),
-						static_cast<float>(y)),
+						position.x + cellSize_,
+						position.y),
 					fillColor));
 			
 			vertices_.append(
 				sf::Vertex(
 					sf::Vector2f(
-						static_cast<float>(x + 1),
-						static_cast<float>(y + 1)),
+						position.x + cellSize_,
+						position.y + cellSize_),
 					fillColor));
 		}
 	}
@@ -100,6 +110,8 @@ void Canvas::initOutline_()
 {
 	const sf::Color color(0, 0, 0);
 	const float thickness = 1.0f;
+	unsigned int width = size_.x * cellSize_;
+	unsigned int height = size_.y * cellSize_;
 	
 	// Top
 
@@ -113,7 +125,7 @@ void Canvas::initOutline_()
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
-				size_.x + thickness,
+				width + thickness,
 				-thickness),
 			color));
 
@@ -134,14 +146,14 @@ void Canvas::initOutline_()
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
-				size_.x + thickness,
+				width + thickness,
 				-thickness),
 			color));
 
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
-				size_.x + thickness,
+				width + thickness,
 				thickness),
 			color));
 
@@ -151,42 +163,42 @@ void Canvas::initOutline_()
 		sf::Vertex(
 			sf::Vector2f(
 				-thickness,
-				size_.y - thickness),
+				height - thickness),
 			color));
 
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
-				size_.x + thickness,
-				size_.y - thickness),
-			color));
-
-	outlineVertices_.append(
-		sf::Vertex(
-			sf::Vector2f(
-				-thickness,
-				size_.y + thickness),
+				width + thickness,
+				height - thickness),
 			color));
 
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
 				-thickness,
-				size_.y + thickness),
+				height + thickness),
 			color));
 
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
-				size_.x + thickness,
-				size_.y - thickness),
+				-thickness,
+				height + thickness),
 			color));
 
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
-				size_.x + thickness,
-				size_.y + thickness),
+				width + thickness,
+				height - thickness),
+			color));
+
+	outlineVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				width + thickness,
+				height + thickness),
 			color));
 
 	// Left
@@ -202,7 +214,7 @@ void Canvas::initOutline_()
 		sf::Vertex(
 			sf::Vector2f(
 				-thickness,
-				size_.y - thickness),
+				height - thickness),
 			color));
 
 	outlineVertices_.append(
@@ -223,14 +235,14 @@ void Canvas::initOutline_()
 		sf::Vertex(
 			sf::Vector2f(
 				-thickness,
-				size_.y - thickness),
+				height - thickness),
 			color));
 
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
 				thickness,
-				size_.y - thickness),
+				height - thickness),
 			color));
 
 	// Right
@@ -238,42 +250,42 @@ void Canvas::initOutline_()
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
-				size_.x - thickness,
+				width - thickness,
 				thickness),
 			color));
 
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
-				size_.x - thickness,
-				size_.y - thickness),
+				width - thickness,
+				height - thickness),
 			color));
 
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
-				size_.x + thickness,
+				width + thickness,
 				thickness),
 			color));
 
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
-				size_.x + thickness,
+				width + thickness,
 				thickness),
 			color));
 
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
-				size_.x - thickness,
-				size_.y - thickness),
+				width - thickness,
+				height - thickness),
 			color));
 
 	outlineVertices_.append(
 		sf::Vertex(
 			sf::Vector2f(
-				size_.x + thickness,
-				size_.y - thickness),
+				width + thickness,
+				height - thickness),
 			color));
 }

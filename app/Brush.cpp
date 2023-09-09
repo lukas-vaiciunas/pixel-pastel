@@ -21,18 +21,19 @@ void Brush::updateOnMouseMove(
 	float cameraZoom)
 {
 	const sf::Vector2u &canvasSize = canvas.getSize();
+	const unsigned int canvasCellSize = canvas.getCellSize();
 
 	const sf::Vector2f mouseRelativePosition(
 		mouseX / cameraZoom + cameraPosition.x,
 		mouseY / cameraZoom + cameraPosition.y);
 
 	isInBounds_ = mouseRelativePosition.x >= 0.0f
-		&& mouseRelativePosition.x < canvasSize.x
+		&& mouseRelativePosition.x < canvasSize.x * canvasCellSize
 		&& mouseRelativePosition.y >= 0.0f
-		&& mouseRelativePosition.y < canvasSize.y;
+		&& mouseRelativePosition.y < canvasSize.y * canvasCellSize;
 
-	canvasPosition_.x = static_cast<unsigned int>(mouseRelativePosition.x);
-	canvasPosition_.y = static_cast<unsigned int>(mouseRelativePosition.y);
+	canvasPosition_.x = static_cast<unsigned int>(mouseRelativePosition.x / canvasCellSize);
+	canvasPosition_.y = static_cast<unsigned int>(mouseRelativePosition.y / canvasCellSize);
 
 	this->paint_(canvas);
 }

@@ -16,11 +16,14 @@ public:
 		const sf::Color &color);
 
 	const sf::Vector2u &getSize() const;
+	unsigned int getCellSize() const;
 private:
 	sf::VertexArray vertices_;
 	sf::VertexArray outlineVertices_;
 
 	sf::Vector2u size_;
+
+	unsigned int cellSize_;
 
 	void init_();
 	void initOutline_();
