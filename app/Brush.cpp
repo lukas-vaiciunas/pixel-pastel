@@ -6,7 +6,8 @@ Brush::Brush() :
 	Listener({ EventType::SetBrushColor }),
 	color_(0, 0, 0),
 	isInBounds_(false),
-	isPainting_(false)
+	isPainting_(false),
+	isErasing_(false)
 {}
 
 void Brush::onEvent(const Event &ev)
@@ -35,39 +36,62 @@ void Brush::updateOnMouseMove(
 	canvasPosition_.x = static_cast<unsigned int>(mouseRelativePosition.x / canvasCellSize);
 	canvasPosition_.y = static_cast<unsigned int>(mouseRelativePosition.y / canvasCellSize);
 
-	this->paint_(canvas);
+	if (isPainting_)
+	{
+		this->paint_(canvas);
+	}
+	if (isErasing_)
+	{
+		this->erase_(canvas);
+	}
 }
 
 void Brush::updateOnMouseButtonPress(
 	sf::Mouse::Button button,
 	Canvas &canvas)
 {
-	if (button != sf::Mouse::Button::Left)
+	if (button == sf::Mouse::Button::Left)
 	{
-		return;
+		isPainting_ = true;
+
+		this->paint_(canvas);
 	}
+	else if (button == sf::Mouse::Button::Right)
+	{
+		isErasing_ = true;
 
-	isPainting_ = true;
-
-	this->paint_(canvas);
+		this->erase_(canvas);
+	}
 }
 
 void Brush::updateOnMouseButtonRelease(sf::Mouse::Button button)
 {
-	if (button != sf::Mouse::Button::Left)
+	if (button == sf::Mouse::Button::Left)
 	{
-		return;
+		isPainting_ = false;
 	}
-
-	isPainting_ = false;
+	else if (button == sf::Mouse::Button::Right)
+	{
+		isErasing_ = false;
+	}
 }
 
 void Brush::paint_(Canvas &canvas)
 {
-	if (!isInBounds_ || !isPainting_)
+	if (!isInBounds_)
 	{
 		return;
 	}
 
 	canvas.setColor(canvasPosition_, color_);
+}
+
+void Brush::erase_(Canvas &canvas)
+{
+	if (!isInBounds_)
+	{
+		return;
+	}
+
+	canvas.erase(canvasPosition_);
 }

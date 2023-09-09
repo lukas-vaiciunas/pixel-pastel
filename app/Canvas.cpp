@@ -30,6 +30,13 @@ void Canvas::draw(
 	target.draw(vertices_, states);
 }
 
+void Canvas::erase(const sf::Vector2u &position)
+{
+	this->setColor(
+		position,
+		sf::Color(255, 255, 255, 0));
+}
+
 void Canvas::setColor(
 	const sf::Vector2u &position,
 	const sf::Color &color)

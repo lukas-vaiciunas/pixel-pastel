@@ -12,6 +12,8 @@ public:
 		sf::RenderTarget &target,
 		sf::RenderStates states) const override;
 
+	void erase(const sf::Vector2u &position);
+
 	void setColor(
 		const sf::Vector2u &position,
 		const sf::Color &color);

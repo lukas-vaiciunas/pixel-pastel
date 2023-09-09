@@ -31,6 +31,8 @@ private:
 
 	bool isInBounds_;
 	bool isPainting_;
+	bool isErasing_;
 
 	void paint_(Canvas &canvas);
+	void erase_(Canvas &canvas);
 };
