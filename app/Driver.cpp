@@ -64,6 +64,10 @@ void Driver::updateOnKeyPress(sf::Keyboard::Key key)
 	{
 		this->resetCamera_();
 	}
+	else if (key == sf::Keyboard::G)
+	{
+		canvas_.toggleGrid();
+	}
 }
 
 void Driver::draw(

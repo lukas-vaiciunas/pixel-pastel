@@ -9,7 +9,8 @@ Canvas::Canvas(const sf::Vector2u &size) :
 	gridVertices_(sf::PrimitiveType::Triangles),
 	transparencyTexture_(),
 	size_(size),
-	cellSize_(8)
+	cellSize_(8),
+	isGridActive_(false)
 {
 	if (!transparencyTexture_.loadFromFile("./assets/textures/transparency.png"))
 	{
@@ -29,7 +30,16 @@ void Canvas::draw(
 	target.draw(outlineVertices_, states);
 	target.draw(transparencyVertices_, transparencyStates);
 	target.draw(vertices_, states);
-	target.draw(gridVertices_, states);
+
+	if (isGridActive_)
+	{
+		target.draw(gridVertices_, states);
+	}
+}
+
+void Canvas::toggleGrid()
+{
+	isGridActive_ = !isGridActive_;
 }
 
 void Canvas::erase(const sf::Vector2u &position)

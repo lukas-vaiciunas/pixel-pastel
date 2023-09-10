@@ -12,6 +12,8 @@ public:
 		sf::RenderTarget &target,
 		sf::RenderStates states) const override;
 
+	void toggleGrid();
+
 	void erase(const sf::Vector2u &position);
 
 	void setColor(
@@ -31,6 +33,8 @@ private:
 	sf::Vector2u size_;
 
 	unsigned int cellSize_;
+
+	bool isGridActive_;
 
 	void init_();
 	void initOutline_();
