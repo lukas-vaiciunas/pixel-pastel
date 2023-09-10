@@ -1,7 +1,4 @@
-#include "Canvas.h"
-#include "Brush.h"
-#include "Palette.h"
-#include "Camera.h"
+#include "Driver.h"
 #include "EventQueue.h"
 #include "Config.h"
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -26,26 +23,7 @@ int main(void)
 	window.setFramerateLimit(60);
 	window.setKeyRepeatEnabled(false);
 
-	Canvas canvas(sf::Vector2u(32, 32));
-	Brush brush;
-	Palette palette;
-	Camera camera;
-
-	palette.load("./palettes/pico-8.txt");
-
-	const sf::Vector2u canvasPixelSize = canvas.getSize() * canvas.getCellSize();
-
-	camera.setZoom(
-		std::fminf(
-			Config::Window::width / static_cast<float>(canvasPixelSize.x),
-			Config::Window::height / static_cast<float>(canvasPixelSize.y)) * 0.75f);
-
-	camera.setPosition(
-		sf::Vector2f(
-			(canvasPixelSize.x - Config::Window::width / camera.getZoom()) * 0.5f,
-			(canvasPixelSize.y - Config::Window::height / camera.getZoom()) * 0.5f));
-
-	sf::Vector2i lastMousePosition(0, 0);
+	Driver driver;
 
 	while (window.isOpen())
 	{
@@ -56,39 +34,16 @@ int main(void)
 			switch (ev.type)
 			{
 				case sf::Event::MouseMoved:
-					camera.updateOnMouseMove(
-						ev.mouseMove.x - lastMousePosition.x,
-						ev.mouseMove.y - lastMousePosition.y);
-
-					brush.updateOnMouseMove(
-						ev.mouseMove.x, ev.mouseMove.y,
-						canvas,
-						camera.getPosition(),
-						camera.getZoom());
-
-					lastMousePosition.x = ev.mouseMove.x;
-					lastMousePosition.y = ev.mouseMove.y;
+					driver.updateOnMouseMove(ev.mouseMove.x, ev.mouseMove.y);
 					break;
 				case sf::Event::MouseWheelScrolled:
-					camera.updateOnMouseWheelScroll(
-						ev.mouseWheelScroll.delta,
-						ev.mouseWheelScroll.x, ev.mouseWheelScroll.y);
+					driver.updateOnMouseWheelScroll(ev.mouseWheelScroll.delta);
 					break;
 				case sf::Event::MouseButtonPressed:
-					camera.updateOnMouseButtonPress(ev.mouseButton.button);
-
-					brush.updateOnMouseButtonPress(
-						ev.mouseButton.button,
-						canvas);
-
-					palette.updateOnMousePress(
-						ev.mouseButton.button,
-						ev.mouseButton.x, ev.mouseButton.y);
+					driver.updateOnMouseButtonPress(ev.mouseButton.button);
 					break;
 				case sf::Event::MouseButtonReleased:
-					camera.updateOnMouseButtonRelease(ev.mouseButton.button);
-
-					brush.updateOnMouseButtonRelease(ev.mouseButton.button);
+					driver.updateOnMouseButtonRelease(ev.mouseButton.button);
 					break;
 				case sf::Event::EventType::Closed:
 					window.close();
@@ -98,21 +53,8 @@ int main(void)
 
 		EventQueue::getInstance().dispatch();
 
-		const float cameraZoom = camera.getZoom();
-
-		sf::Transform cameraTransform;
-		cameraTransform.scale(sf::Vector2f(cameraZoom, cameraZoom));
-		cameraTransform.translate(-camera.getPosition());
-
-		sf::Transform interfaceTransform;
-		interfaceTransform.scale(
-			sf::Vector2f(
-				Config::Interface::scale,
-				Config::Interface::scale));
-
 		window.clear(clearColor);
-		window.draw(canvas, cameraTransform);
-		window.draw(palette, interfaceTransform);
+		window.draw(driver);
 		window.display();
 	}
 
