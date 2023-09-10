@@ -72,6 +72,10 @@ void Driver::updateOnKeyPress(sf::Keyboard::Key key)
 	{
 		canvas_.save("./output/test.png");
 	}
+	else if (key == sf::Keyboard::L)
+	{
+		canvas_.load("./output/test.png");
+	}
 	else
 	{
 		brush_.updateOnKeyPress(key);

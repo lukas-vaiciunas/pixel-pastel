@@ -12,6 +12,7 @@ public:
 		sf::RenderTarget &target,
 		sf::RenderStates states) const override;
 
+	void load(const std::string &filePath);
 	void save(const std::string &filePath);
 
 	void toggleGrid();
@@ -47,6 +48,10 @@ private:
 		sf::VertexArray &vertices,
 		const sf::Vector2f &minPosition,
 		const sf::Vector2f &maxPosition,
+		const sf::Color &color);
+
+	void setColor_(
+		unsigned int base,
 		const sf::Color &color);
 
 	unsigned int getBase_(const sf::Vector2u &position) const;

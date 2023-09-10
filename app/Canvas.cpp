@@ -38,13 +38,38 @@ void Canvas::draw(
 	}
 }
 
+void Canvas::load(const std::string &filePath)
+{
+	std::vector<unsigned char> buffer;
+
+	lodepng::decode(buffer, size_.x, size_.y, filePath);
+
+	this->init_();
+
+	const unsigned int numColors = size_.x * size_.y;
+
+	for (unsigned int i = 0; i < numColors; ++i)
+	{
+		const unsigned int bufferBase = i * 4;
+		const unsigned int vertexBase = i * 6;
+
+		this->setColor_(
+			vertexBase,
+			sf::Color(
+				buffer[bufferBase],
+				buffer[bufferBase + 1],
+				buffer[bufferBase + 2],
+				buffer[bufferBase + 3]));
+	}
+}
+
 void Canvas::save(const std::string &filePath)
 {
 	std::vector<unsigned char> buffer(size_.x * size_.y * 4, 0);
 
-	for (unsigned int y = 0; y < size_.y; ++y)
+	for (size_t y = 0; y < size_.y; ++y)
 	{
-		for (unsigned int x = 0; x < size_.x; ++x)
+		for (size_t x = 0; x < size_.x; ++x)
 		{
 			const size_t base = x + y * size_.x;
 			const size_t bufferBase = base * 4;
@@ -76,17 +101,7 @@ void Canvas::setColor(
 	const sf::Vector2u &position,
 	const sf::Color &color)
 {
-	const unsigned int base = this->getBase_(position);
-
-	if (vertices_[base].color == color)
-	{
-		return;
-	}
-
-	for (unsigned int i = base; i < base + 6; ++i)
-	{
-		vertices_[i].color = color;
-	}
+	this->setColor_(this->getBase_(position), color);
 }
 
 const sf::Color &Canvas::getColor(const sf::Vector2u &position) const
@@ -303,6 +318,21 @@ void Canvas::addQuad_(
 		sf::Vertex(
 			maxPosition,
 			color));
+}
+
+void Canvas::setColor_(
+	unsigned int base,
+	const sf::Color &color)
+{
+	if (vertices_[base].color == color)
+	{
+		return;
+	}
+
+	for (unsigned int i = base; i < base + 6; ++i)
+	{
+		vertices_[i].color = color;
+	}
 }
 
 unsigned int Canvas::getBase_(const sf::Vector2u &position) const
