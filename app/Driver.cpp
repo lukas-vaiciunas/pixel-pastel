@@ -68,6 +68,10 @@ void Driver::updateOnKeyPress(sf::Keyboard::Key key)
 	{
 		canvas_.toggleGrid();
 	}
+	else if (key == sf::Keyboard::S)
+	{
+		canvas_.save("./output/test.png");
+	}
 	else
 	{
 		brush_.updateOnKeyPress(key);

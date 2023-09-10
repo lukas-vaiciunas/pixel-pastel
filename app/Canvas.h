@@ -12,6 +12,8 @@ public:
 		sf::RenderTarget &target,
 		sf::RenderStates states) const override;
 
+	void save(const std::string &filePath);
+
 	void toggleGrid();
 
 	void erase(const sf::Vector2u &position);

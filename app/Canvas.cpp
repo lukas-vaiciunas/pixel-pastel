@@ -1,4 +1,5 @@
 #include "Canvas.h"
+#include "LodePNG.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 Canvas::Canvas(const sf::Vector2u &size) :
@@ -35,6 +36,28 @@ void Canvas::draw(
 	{
 		target.draw(gridVertices_, states);
 	}
+}
+
+void Canvas::save(const std::string &filePath)
+{
+	std::vector<unsigned char> buffer(size_.x * size_.y * 4, 0);
+
+	for (unsigned int y = 0; y < size_.y; ++y)
+	{
+		for (unsigned int x = 0; x < size_.x; ++x)
+		{
+			const size_t base = x + y * size_.x;
+			const size_t bufferBase = base * 4;
+			const size_t vertexBase = base * 6;
+
+			buffer[bufferBase] = vertices_[vertexBase].color.r;
+			buffer[bufferBase + 1] = vertices_[vertexBase].color.g;
+			buffer[bufferBase + 2] = vertices_[vertexBase].color.b;
+			buffer[bufferBase + 3] = vertices_[vertexBase].color.a;
+		}
+	}
+
+	lodepng::encode(filePath, buffer, size_.x, size_.y);
 }
 
 void Canvas::toggleGrid()
