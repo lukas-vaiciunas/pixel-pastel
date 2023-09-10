@@ -53,8 +53,7 @@ void Canvas::setColor(
 	const sf::Vector2u &position,
 	const sf::Color &color)
 {
-	const unsigned int width = size_.x * 6;
-	const unsigned int base = position.x * 6 + position.y * width;
+	const unsigned int base = this->getBase_(position);
 
 	if (vertices_[base].color == color)
 	{
@@ -65,6 +64,11 @@ void Canvas::setColor(
 	{
 		vertices_[i].color = color;
 	}
+}
+
+const sf::Color &Canvas::getColor(const sf::Vector2u &position) const
+{
+	return vertices_[this->getBase_(position)].color;
 }
 
 const sf::Vector2u &Canvas::getSize() const
@@ -276,4 +280,11 @@ void Canvas::addQuad_(
 		sf::Vertex(
 			maxPosition,
 			color));
+}
+
+unsigned int Canvas::getBase_(const sf::Vector2u &position) const
+{
+	const unsigned int width = size_.x * 6;
+
+	return position.x * 6 + position.y * width;
 }

@@ -20,6 +20,7 @@ public:
 		const sf::Vector2u &position,
 		const sf::Color &color);
 
+	const sf::Color &getColor(const sf::Vector2u &position) const;
 	const sf::Vector2u &getSize() const;
 	unsigned int getCellSize() const;
 private:
@@ -45,4 +46,6 @@ private:
 		const sf::Vector2f &minPosition,
 		const sf::Vector2f &maxPosition,
 		const sf::Color &color);
+
+	unsigned int getBase_(const sf::Vector2u &position) const;
 };

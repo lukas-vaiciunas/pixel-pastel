@@ -68,6 +68,15 @@ void Driver::updateOnKeyPress(sf::Keyboard::Key key)
 	{
 		canvas_.toggleGrid();
 	}
+	else
+	{
+		brush_.updateOnKeyPress(key);
+	}
+}
+
+void Driver::updateOnKeyRelease(sf::Keyboard::Key key)
+{
+	brush_.updateOnKeyRelease(key);
 }
 
 void Driver::draw(

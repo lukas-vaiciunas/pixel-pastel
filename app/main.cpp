@@ -48,6 +48,9 @@ int main(void)
 				case sf::Event::KeyPressed:
 					driver.updateOnKeyPress(ev.key.code);
 					break;
+				case sf::Event::KeyReleased:
+					driver.updateOnKeyRelease(ev.key.code);
+					break;
 				case sf::Event::EventType::Closed:
 					window.close();
 					break;

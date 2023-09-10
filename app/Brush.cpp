@@ -6,8 +6,9 @@ Brush::Brush() :
 	Listener({ EventType::SetBrushColor }),
 	color_(0, 0, 0),
 	isInBounds_(false),
-	isPainting_(false),
-	isErasing_(false)
+	isLeftMouseButtonPressed_(false),
+	isRightMouseButtonPressed_(false),
+	isControlPressed_(false)
 {}
 
 void Brush::onEvent(const Event &ev)
@@ -36,13 +37,13 @@ void Brush::updateOnMouseMove(
 	canvasPosition_.x = static_cast<unsigned int>(mouseRelativePosition.x / canvasCellSize);
 	canvasPosition_.y = static_cast<unsigned int>(mouseRelativePosition.y / canvasCellSize);
 
-	if (isPainting_)
+	if (isLeftMouseButtonPressed_)
 	{
-		this->paint_(canvas);
+		this->onLeftMouseButton_(canvas);
 	}
-	if (isErasing_)
+	if (isRightMouseButtonPressed_)
 	{
-		this->erase_(canvas);
+		this->onRightMouseButton_(canvas);
 	}
 }
 
@@ -52,15 +53,15 @@ void Brush::updateOnMouseButtonPress(
 {
 	if (button == sf::Mouse::Button::Left)
 	{
-		isPainting_ = true;
+		isLeftMouseButtonPressed_ = true;
 
-		this->paint_(canvas);
+		this->onLeftMouseButton_(canvas);
 	}
 	else if (button == sf::Mouse::Button::Right)
 	{
-		isErasing_ = true;
+		isRightMouseButtonPressed_ = true;
 
-		this->erase_(canvas);
+		this->onRightMouseButton_(canvas);
 	}
 }
 
@@ -68,12 +69,47 @@ void Brush::updateOnMouseButtonRelease(sf::Mouse::Button button)
 {
 	if (button == sf::Mouse::Button::Left)
 	{
-		isPainting_ = false;
+		isLeftMouseButtonPressed_ = false;
 	}
 	else if (button == sf::Mouse::Button::Right)
 	{
-		isErasing_ = false;
+		isRightMouseButtonPressed_ = false;
 	}
+}
+
+void Brush::updateOnKeyPress(sf::Keyboard::Key key)
+{
+	if (key == sf::Keyboard::Key::LControl
+		|| key == sf::Keyboard::Key::RControl)
+	{
+		isControlPressed_ = true;
+	}
+}
+
+void Brush::updateOnKeyRelease(sf::Keyboard::Key key)
+{
+	if (key == sf::Keyboard::Key::LControl
+		|| key == sf::Keyboard::Key::RControl)
+	{
+		isControlPressed_ = false;
+	}
+}
+
+void Brush::onLeftMouseButton_(Canvas &canvas)
+{
+	if (isControlPressed_)
+	{
+		this->pick_(canvas);
+	}
+	else
+	{
+		this->paint_(canvas);
+	}
+}
+
+void Brush::onRightMouseButton_(Canvas &canvas)
+{
+	this->erase_(canvas);
 }
 
 void Brush::paint_(Canvas &canvas)
@@ -94,4 +130,14 @@ void Brush::erase_(Canvas &canvas)
 	}
 
 	canvas.erase(canvasPosition_);
+}
+
+void Brush::pick_(const Canvas &canvas)
+{
+	if (!isInBounds_)
+	{
+		return;
+	}
+
+	color_ = canvas.getColor(canvasPosition_);
 }

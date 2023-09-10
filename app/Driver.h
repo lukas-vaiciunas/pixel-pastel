@@ -4,7 +4,6 @@
 #include "Brush.h"
 #include "Palette.h"
 #include "Camera.h"
-#include <SFML/Window/Keyboard.hpp>
 
 class Driver : public sf::Drawable
 {
@@ -16,6 +15,7 @@ public:
 	void updateOnMouseButtonPress(sf::Mouse::Button button);
 	void updateOnMouseButtonRelease(sf::Mouse::Button button);
 	void updateOnKeyPress(sf::Keyboard::Key key);
+	void updateOnKeyRelease(sf::Keyboard::Key key);
 
 	void draw(
 		sf::RenderTarget &target,
