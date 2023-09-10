@@ -4,6 +4,7 @@
 #include "Brush.h"
 #include "Palette.h"
 #include "Camera.h"
+#include <SFML/Window/Keyboard.hpp>
 
 class Driver : public sf::Drawable
 {
@@ -14,6 +15,7 @@ public:
 	void updateOnMouseWheelScroll(float delta);
 	void updateOnMouseButtonPress(sf::Mouse::Button button);
 	void updateOnMouseButtonRelease(sf::Mouse::Button button);
+	void updateOnKeyPress(sf::Keyboard::Key key);
 
 	void draw(
 		sf::RenderTarget &target,
@@ -25,6 +27,8 @@ private:
 	Camera camera_;
 
 	sf::Vector2i mousePosition_;
+
+	void resetCamera_();
 
 	void drawCameraTransform_(
 		sf::RenderTarget &target,

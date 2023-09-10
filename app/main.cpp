@@ -45,6 +45,9 @@ int main(void)
 				case sf::Event::MouseButtonReleased:
 					driver.updateOnMouseButtonRelease(ev.mouseButton.button);
 					break;
+				case sf::Event::KeyPressed:
+					driver.updateOnKeyPress(ev.key.code);
+					break;
 				case sf::Event::EventType::Closed:
 					window.close();
 					break;

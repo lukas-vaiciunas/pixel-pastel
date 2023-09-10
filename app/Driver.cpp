@@ -10,17 +10,7 @@ Driver::Driver() :
 	camera_(),
 	mousePosition_(0, 0)
 {
-	const sf::Vector2u canvasPixelSize = canvas_.getSize() * canvas_.getCellSize();
-
-	camera_.setZoom(
-		std::fminf(
-			Config::Window::width / static_cast<float>(canvasPixelSize.x),
-			Config::Window::height / static_cast<float>(canvasPixelSize.y)) * 0.75f);
-
-	camera_.setPosition(
-		sf::Vector2f(
-			(canvasPixelSize.x - Config::Window::width / camera_.getZoom()) * 0.5f,
-			(canvasPixelSize.y - Config::Window::height / camera_.getZoom()) * 0.5f));
+	this->resetCamera_();
 
 	palette_.load("./palettes/pico-8.txt");
 }
@@ -68,12 +58,35 @@ void Driver::updateOnMouseButtonRelease(sf::Mouse::Button button)
 	brush_.updateOnMouseButtonRelease(button);
 }
 
+void Driver::updateOnKeyPress(sf::Keyboard::Key key)
+{
+	if (key == sf::Keyboard::Key::C)
+	{
+		this->resetCamera_();
+	}
+}
+
 void Driver::draw(
 	sf::RenderTarget &target,
 	sf::RenderStates states) const
 {
 	this->drawCameraTransform_(target, states);
 	this->drawInterfaceTransform_(target, states);
+}
+
+void Driver::resetCamera_()
+{
+	const sf::Vector2u canvasPixelSize = canvas_.getSize() * canvas_.getCellSize();
+
+	camera_.setZoom(
+		std::fminf(
+			Config::Window::width / static_cast<float>(canvasPixelSize.x),
+			Config::Window::height / static_cast<float>(canvasPixelSize.y)) * 0.75f);
+
+	camera_.setPosition(
+		sf::Vector2f(
+			(canvasPixelSize.x - Config::Window::width / camera_.getZoom()) * 0.5f,
+			(canvasPixelSize.y - Config::Window::height / camera_.getZoom()) * 0.5f));
 }
 
 void Driver::drawCameraTransform_(
