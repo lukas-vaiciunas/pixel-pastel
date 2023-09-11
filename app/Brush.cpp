@@ -8,7 +8,8 @@ Brush::Brush() :
 	isInBounds_(false),
 	isLeftMouseButtonPressed_(false),
 	isRightMouseButtonPressed_(false),
-	isControlPressed_(false)
+	isControlPressed_(false),
+	isShiftPressed_(false)
 {}
 
 void Brush::onEvent(const Event &ev)
@@ -84,6 +85,11 @@ void Brush::updateOnKeyPress(sf::Keyboard::Key key)
 	{
 		isControlPressed_ = true;
 	}
+	else if (key == sf::Keyboard::Key::LShift
+		|| key == sf::Keyboard::Key::RShift)
+	{
+		isShiftPressed_ = true;
+	}
 }
 
 void Brush::updateOnKeyRelease(sf::Keyboard::Key key)
@@ -93,6 +99,11 @@ void Brush::updateOnKeyRelease(sf::Keyboard::Key key)
 	{
 		isControlPressed_ = false;
 	}
+	else if (key == sf::Keyboard::Key::LShift
+		|| key == sf::Keyboard::Key::RShift)
+	{
+		isShiftPressed_ = false;
+	}
 }
 
 void Brush::onLeftMouseButton_(Canvas &canvas)
@@ -100,6 +111,10 @@ void Brush::onLeftMouseButton_(Canvas &canvas)
 	if (isControlPressed_)
 	{
 		this->pick_(canvas);
+	}
+	else if (isShiftPressed_)
+	{
+		this->fill_(canvas);
 	}
 	else
 	{
@@ -120,6 +135,16 @@ void Brush::paint_(Canvas &canvas)
 	}
 
 	canvas.setColor(canvasPosition_, color_);
+}
+
+void Brush::fill_(Canvas &canvas)
+{
+	if (!isInBounds_)
+	{
+		return;
+	}
+
+	canvas.fill(canvasPosition_, color_);
 }
 
 void Brush::erase_(Canvas &canvas)

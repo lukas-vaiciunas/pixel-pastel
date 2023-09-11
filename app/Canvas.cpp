@@ -1,6 +1,8 @@
 #include "Canvas.h"
 #include "LodePNG.h"
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <unordered_set>
+#include <queue>
 
 Canvas::Canvas(const sf::Vector2u &size) :
 	sf::Drawable(),
@@ -67,11 +69,11 @@ void Canvas::save(const std::string &filePath)
 {
 	std::vector<unsigned char> buffer(size_.x * size_.y * 4, 0);
 
-	for (size_t y = 0; y < size_.y; ++y)
+	for (unsigned int y = 0; y < size_.y; ++y)
 	{
-		for (size_t x = 0; x < size_.x; ++x)
+		for (unsigned int x = 0; x < size_.x; ++x)
 		{
-			const size_t base = x + y * size_.x;
+			const size_t base = this->spatialHash_(x, y);
 			const size_t bufferBase = base * 4;
 			const size_t vertexBase = base * 6;
 
@@ -90,6 +92,88 @@ void Canvas::toggleGrid()
 	isGridActive_ = !isGridActive_;
 }
 
+void Canvas::fill(
+	const sf::Vector2u &position,
+	const sf::Color &color)
+{
+	std::unordered_set<unsigned int> visitedHashes_;
+	std::queue<sf::Vector2u> queue_;
+
+	const sf::Color replaceColor = vertices_[static_cast<size_t>(this->spatialHash_(position)) * 6].color;
+
+	queue_.push(position);
+	visitedHashes_.emplace(this->spatialHash_(position));
+
+	while (!queue_.empty())
+	{
+		sf::Vector2u curr = queue_.front();
+		queue_.pop();
+
+		this->setColor(curr, color);
+
+		if (curr.x > 0)
+		{
+			unsigned int hash = this->spatialHash_(curr.x - 1, curr.y);
+
+			if (visitedHashes_.find(hash) == visitedHashes_.end())
+			{
+				const sf::Vector2u next(curr.x - 1, curr.y);
+
+				if (vertices_[static_cast<size_t>(hash) * 6].color == replaceColor)
+				{
+					queue_.push(next);
+					visitedHashes_.emplace(hash);
+				}
+			}
+		}
+		if (curr.x < size_.x - 1)
+		{
+			unsigned int hash = this->spatialHash_(curr.x + 1, curr.y);
+
+			if (visitedHashes_.find(hash) == visitedHashes_.end())
+			{
+				const sf::Vector2u next(curr.x + 1, curr.y);
+
+				if (vertices_[static_cast<size_t>(hash) * 6].color == replaceColor)
+				{
+					queue_.push(next);
+					visitedHashes_.emplace(hash);
+				}
+			}
+		}
+		if (curr.y > 0)
+		{
+			unsigned int hash = this->spatialHash_(curr.x, curr.y - 1);
+
+			if (visitedHashes_.find(hash) == visitedHashes_.end())
+			{
+				const sf::Vector2u next(curr.x, curr.y - 1);
+
+				if (vertices_[static_cast<size_t>(hash) * 6].color == replaceColor)
+				{
+					queue_.push(next);
+					visitedHashes_.emplace(hash);
+				}
+			}
+		}
+		if (curr.y < size_.y - 1)
+		{
+			unsigned int hash = this->spatialHash_(curr.x, curr.y + 1);
+
+			if (visitedHashes_.find(hash) == visitedHashes_.end())
+			{
+				const sf::Vector2u next(curr.x, curr.y + 1);
+
+				if (vertices_[static_cast<size_t>(hash) * 6].color == replaceColor)
+				{
+					queue_.push(next);
+					visitedHashes_.emplace(hash);
+				}
+			}
+		}
+	}
+}
+
 void Canvas::erase(const sf::Vector2u &position)
 {
 	this->setColor(
@@ -101,12 +185,12 @@ void Canvas::setColor(
 	const sf::Vector2u &position,
 	const sf::Color &color)
 {
-	this->setColor_(this->getBase_(position), color);
+	this->setColor_(this->spatialHash_(position) * 6, color);
 }
 
 const sf::Color &Canvas::getColor(const sf::Vector2u &position) const
 {
-	return vertices_[this->getBase_(position)].color;
+	return vertices_[static_cast<size_t>(this->spatialHash_(position)) * 6].color;
 }
 
 const sf::Vector2u &Canvas::getSize() const
@@ -335,9 +419,12 @@ void Canvas::setColor_(
 	}
 }
 
-unsigned int Canvas::getBase_(const sf::Vector2u &position) const
+unsigned int Canvas::spatialHash_(const sf::Vector2u &position) const
 {
-	const unsigned int width = size_.x * 6;
+	return this->spatialHash_(position.x, position.y);
+}
 
-	return position.x * 6 + position.y * width;
+unsigned int Canvas::spatialHash_(unsigned int x, unsigned int y) const
+{
+	return x + y * size_.x;
 }

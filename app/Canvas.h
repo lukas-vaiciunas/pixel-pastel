@@ -17,6 +17,10 @@ public:
 
 	void toggleGrid();
 
+	void fill(
+		const sf::Vector2u &position,
+		const sf::Color &color);
+
 	void erase(const sf::Vector2u &position);
 
 	void setColor(
@@ -54,5 +58,6 @@ private:
 		unsigned int base,
 		const sf::Color &color);
 
-	unsigned int getBase_(const sf::Vector2u &position) const;
+	unsigned int spatialHash_(const sf::Vector2u &position) const;
+	unsigned int spatialHash_(unsigned int x, unsigned int y) const;
 };

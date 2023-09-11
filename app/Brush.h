@@ -40,11 +40,13 @@ private:
 	bool isRightMouseButtonPressed_;
 
 	bool isControlPressed_;
+	bool isShiftPressed_;
 
 	void onLeftMouseButton_(Canvas &canvas);
 	void onRightMouseButton_(Canvas &canvas);
 
 	void paint_(Canvas &canvas);
+	void fill_(Canvas &canvas);
 	void erase_(Canvas &canvas);
 	void pick_(const Canvas &canvas);
 };
