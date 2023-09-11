@@ -1,8 +1,6 @@
 #include "Canvas.h"
 #include "LodePNG.h"
 #include <SFML/Graphics/RenderTarget.hpp>
-#include <unordered_set>
-#include <queue>
 
 Canvas::Canvas(const sf::Vector2u &size) :
 	sf::Drawable(),
@@ -96,80 +94,36 @@ void Canvas::fill(
 	const sf::Vector2u &position,
 	const sf::Color &color)
 {
-	std::unordered_set<unsigned int> visitedHashes_;
-	std::queue<sf::Vector2u> queue_;
+	std::queue<sf::Vector2u> queue;
+	std::unordered_set<unsigned int> visitedHashes;
 
 	const sf::Color replaceColor = vertices_[static_cast<size_t>(this->spatialHash_(position)) * 6].color;
 
-	queue_.push(position);
-	visitedHashes_.emplace(this->spatialHash_(position));
+	queue.push(position);
+	visitedHashes.emplace(this->spatialHash_(position));
 
-	while (!queue_.empty())
+	while (!queue.empty())
 	{
-		sf::Vector2u curr = queue_.front();
-		queue_.pop();
+		sf::Vector2u curr = queue.front();
+		queue.pop();
 
 		this->setColor(curr, color);
 
 		if (curr.x > 0)
 		{
-			unsigned int hash = this->spatialHash_(curr.x - 1, curr.y);
-
-			if (visitedHashes_.find(hash) == visitedHashes_.end())
-			{
-				const sf::Vector2u next(curr.x - 1, curr.y);
-
-				if (vertices_[static_cast<size_t>(hash) * 6].color == replaceColor)
-				{
-					queue_.push(next);
-					visitedHashes_.emplace(hash);
-				}
-			}
+			this->fillHelper_(curr.x - 1, curr.y, replaceColor, queue, visitedHashes);
 		}
 		if (curr.x < size_.x - 1)
 		{
-			unsigned int hash = this->spatialHash_(curr.x + 1, curr.y);
-
-			if (visitedHashes_.find(hash) == visitedHashes_.end())
-			{
-				const sf::Vector2u next(curr.x + 1, curr.y);
-
-				if (vertices_[static_cast<size_t>(hash) * 6].color == replaceColor)
-				{
-					queue_.push(next);
-					visitedHashes_.emplace(hash);
-				}
-			}
+			this->fillHelper_(curr.x + 1, curr.y, replaceColor, queue, visitedHashes);
 		}
 		if (curr.y > 0)
 		{
-			unsigned int hash = this->spatialHash_(curr.x, curr.y - 1);
-
-			if (visitedHashes_.find(hash) == visitedHashes_.end())
-			{
-				const sf::Vector2u next(curr.x, curr.y - 1);
-
-				if (vertices_[static_cast<size_t>(hash) * 6].color == replaceColor)
-				{
-					queue_.push(next);
-					visitedHashes_.emplace(hash);
-				}
-			}
+			this->fillHelper_(curr.x, curr.y - 1, replaceColor, queue, visitedHashes);
 		}
 		if (curr.y < size_.y - 1)
 		{
-			unsigned int hash = this->spatialHash_(curr.x, curr.y + 1);
-
-			if (visitedHashes_.find(hash) == visitedHashes_.end())
-			{
-				const sf::Vector2u next(curr.x, curr.y + 1);
-
-				if (vertices_[static_cast<size_t>(hash) * 6].color == replaceColor)
-				{
-					queue_.push(next);
-					visitedHashes_.emplace(hash);
-				}
-			}
+			this->fillHelper_(curr.x, curr.y + 1, replaceColor, queue, visitedHashes);
 		}
 	}
 }
@@ -416,6 +370,26 @@ void Canvas::setColor_(
 	for (unsigned int i = base; i < base + 6; ++i)
 	{
 		vertices_[i].color = color;
+	}
+}
+
+void Canvas::fillHelper_(
+	unsigned int x, unsigned int y,
+	const sf::Color &replaceColor,
+	std::queue<sf::Vector2u> &queue,
+	std::unordered_set<unsigned int> &visitedHashes) const
+{
+	unsigned int hash = this->spatialHash_(x, y);
+
+	if (visitedHashes.find(hash) == visitedHashes.end())
+	{
+		const sf::Vector2u next(x, y);
+
+		if (vertices_[static_cast<size_t>(hash) * 6].color == replaceColor)
+		{
+			queue.push(next);
+			visitedHashes.emplace(hash);
+		}
 	}
 }
 

@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <queue>
+#include <unordered_set>
 
 class Canvas : public sf::Drawable
 {
@@ -57,6 +59,12 @@ private:
 	void setColor_(
 		unsigned int base,
 		const sf::Color &color);
+
+	void fillHelper_(
+		unsigned int x, unsigned int y,
+		const sf::Color &replaceColor,
+		std::queue<sf::Vector2u> &queue,
+		std::unordered_set<unsigned int> &visitedHashes) const;
 
 	unsigned int spatialHash_(const sf::Vector2u &position) const;
 	unsigned int spatialHash_(unsigned int x, unsigned int y) const;
