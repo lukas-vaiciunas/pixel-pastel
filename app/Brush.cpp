@@ -58,7 +58,7 @@ void Brush::updateOnMouseMove(
 	}
 	if (isRightMouseButtonPressed_)
 	{
-		this->onRightMouseButton_(canvas);
+		this->onRightMouseButton_(canvas, modifierKeys);
 	}
 }
 
@@ -77,7 +77,7 @@ void Brush::updateOnMouseButtonPress(
 	{
 		isRightMouseButtonPressed_ = true;
 
-		this->onRightMouseButton_(canvas);
+		this->onRightMouseButton_(canvas, modifierKeys);
 	}
 }
 
@@ -116,14 +116,21 @@ void Brush::onLeftMouseButton_(Canvas &canvas, uint8_t modifierKeys)
 	}
 }
 
-void Brush::onRightMouseButton_(Canvas &canvas)
+void Brush::onRightMouseButton_(Canvas &canvas, uint8_t modifierKeys)
 {
 	if (!isInBounds_)
 	{
 		return;
 	}
 
-	this->erase_(canvas);
+	if (modifierKeys & ModifierKeys::Shift)
+	{
+		this->fill_(canvas, sf::Color(255, 255, 255, 0));
+	}
+	else
+	{
+		this->erase_(canvas);
+	}
 }
 
 void Brush::paint_(Canvas &canvas, const sf::Color &color)

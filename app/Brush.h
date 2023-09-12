@@ -39,7 +39,7 @@ private:
 	bool isRightMouseButtonPressed_;
 
 	void onLeftMouseButton_(Canvas &canvas, uint8_t modifierKeys);
-	void onRightMouseButton_(Canvas &canvas);
+	void onRightMouseButton_(Canvas &canvas, uint8_t modifierKeys);
 
 	void paint_(Canvas &canvas, const sf::Color &color);
 	void fill_(Canvas &canvas, const sf::Color &color);
