@@ -1,5 +1,6 @@
 #include "Canvas.h"
 #include "LodePNG.h"
+#include <NFD/nfd.h>
 #include <SFML/Graphics/RenderTarget.hpp>
 
 Canvas::Canvas(const sf::Vector2u &size) :
@@ -18,7 +19,25 @@ Canvas::Canvas(const sf::Vector2u &size) :
 		fprintf(stderr, "Failed to open \"./assets/textures/transparency.png\" in Canvas::Canvas\n");
 	}
 
-	this->init_();
+	NFD_Init();
+
+	nfdchar_t *outPath = NULL;
+	nfdfilteritem_t filterItem[1] = { {"PNG file (.png)", "png"} };
+
+	nfdresult_t result = NFD_OpenDialog(&outPath, filterItem, 1, NULL);
+
+	if (result == NFD_OKAY)
+	{
+		this->load(outPath);
+
+		NFD_FreePath(outPath);
+	}
+	else
+	{
+		this->init_();
+	}
+
+	NFD_Quit();
 }
 
 void Canvas::draw(
