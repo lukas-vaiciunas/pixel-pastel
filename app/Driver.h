@@ -32,6 +32,8 @@ private:
 
 	void resetCamera_();
 
+	void startOpenDialog_();
+
 	void drawCameraTransform_(
 		sf::RenderTarget &target,
 		sf::RenderStates states) const;

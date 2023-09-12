@@ -1,6 +1,7 @@
 #include "Driver.h"
 #include "ModifierKeys.h"
 #include "Config.h"
+#include <NFD/nfd.h>
 #include <SFML/Graphics/RenderTarget.hpp>
 
 Driver::Driver() :
@@ -77,7 +78,8 @@ void Driver::updateOnKeyPress(sf::Keyboard::Key key)
 			canvas_.save("./output/test.png");
 			break;
 		case sf::Keyboard::Key::L:
-			canvas_.load("./output/test.png");
+			this->startOpenDialog_();
+			this->resetCamera_();
 			break;
 		case sf::Keyboard::Key::LControl:
 		case sf::Keyboard::Key::RControl:
@@ -134,6 +136,25 @@ void Driver::resetCamera_()
 		sf::Vector2f(
 			(canvasPixelSize.x - Config::Window::width / camera_.getZoom()) * 0.5f,
 			(canvasPixelSize.y - Config::Window::height / camera_.getZoom()) * 0.5f));
+}
+
+void Driver::startOpenDialog_()
+{
+	NFD_Init();
+
+	nfdchar_t *outPath = NULL;
+	nfdfilteritem_t filterItem[1] = { {"PNG file (.png)", "png"} };
+
+	nfdresult_t result = NFD_OpenDialog(&outPath, filterItem, 1, NULL);
+
+	if (result == NFD_OKAY)
+	{
+		canvas_.load(outPath);
+
+		NFD_FreePath(outPath);
+	}
+
+	NFD_Quit();
 }
 
 void Driver::drawCameraTransform_(
