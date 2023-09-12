@@ -21,6 +21,7 @@ public:
 		sf::RenderStates states) const override;
 private:
 	sf::VertexArray vertices_;
+	sf::VertexArray outlineVertices_;
 
 	unsigned int numCols_;
 	unsigned int boxSize_;

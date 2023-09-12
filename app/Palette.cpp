@@ -10,6 +10,7 @@
 Palette::Palette() :
 	sf::Drawable(),
 	vertices_(sf::Triangles),
+	outlineVertices_(sf::Triangles),
 	numCols_(0),
 	boxSize_(32),
 	boxGap_(8.0f)
@@ -84,6 +85,7 @@ void Palette::load(const std::string &string)
 	}
 
 	vertices_.clear();
+	outlineVertices_.clear();
 
 	std::string line;
 	std::stringstream ss;
@@ -93,6 +95,8 @@ void Palette::load(const std::string &string)
 	numCols_ = std::stoi(line);
 
 	const float boxOffset = boxSize_ + boxGap_;
+	const float outlineThickness = 2.0f;
+	const sf::Color outlineColor(0, 0, 0);
 
 	unsigned int col = 0;
 	unsigned int row = 0;
@@ -124,6 +128,32 @@ void Palette::load(const std::string &string)
 				position.y + boxSize_),
 			color);
 
+		// Outline
+
+		this->addQuad_(
+			outlineVertices_,
+			sf::Vector2f(position.x - outlineThickness, position.y - outlineThickness),
+			sf::Vector2f(position.x + boxSize_ + outlineThickness, position.y),
+			outlineColor);
+
+		this->addQuad_(
+			outlineVertices_,
+			sf::Vector2f(position.x - outlineThickness, position.y + boxSize_),
+			sf::Vector2f(position.x + boxSize_ + outlineThickness, position.y + boxSize_ + outlineThickness),
+			outlineColor);
+
+		this->addQuad_(
+			outlineVertices_,
+			sf::Vector2f(position.x - outlineThickness, position.y),
+			sf::Vector2f(position.x, position.y + boxSize_),
+			outlineColor);
+
+		this->addQuad_(
+			outlineVertices_,
+			sf::Vector2f(position.x + boxSize_, position.y),
+			sf::Vector2f(position.x + boxSize_ + outlineThickness, position.y + boxSize_),
+			outlineColor);
+
 		if (++col >= numCols_)
 		{
 			col = 0;
@@ -138,6 +168,7 @@ void Palette::draw(
 	sf::RenderTarget &target,
 	sf::RenderStates states) const
 {
+	target.draw(outlineVertices_, states);
 	target.draw(vertices_, states);
 }
 
