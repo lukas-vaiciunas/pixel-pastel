@@ -64,30 +64,27 @@ void Driver::updateOnMouseButtonRelease(sf::Mouse::Button button)
 
 void Driver::updateOnKeyPress(sf::Keyboard::Key key)
 {
-	if (key == sf::Keyboard::Key::C)
+	switch (key)
 	{
-		this->resetCamera_();
-	}
-	else if (key == sf::Keyboard::G)
-	{
-		canvas_.toggleGrid();
-	}
-	else if (key == sf::Keyboard::S)
-	{
-		canvas_.save("./output/test.png");
-	}
-	else if (key == sf::Keyboard::L)
-	{
-		canvas_.load("./output/test.png");
-	}
-	else if (key == sf::Keyboard::Key::LAlt
-		|| key == sf::Keyboard::Key::RAlt)
-	{
-		isAltPressed_ = true;
-	}
-	else
-	{
-		brush_.updateOnKeyPress(key);
+		case sf::Keyboard::Key::C:
+			this->resetCamera_();
+			break;
+		case sf::Keyboard::Key::G:
+			canvas_.toggleGrid();
+			break;
+		case sf::Keyboard::Key::S:
+			canvas_.save("./output/test.png");
+			break;
+		case sf::Keyboard::Key::L:
+			canvas_.load("./output/test.png");
+			break;
+		case sf::Keyboard::Key::LAlt:
+		case sf::Keyboard::Key::RAlt:
+			isAltPressed_ = true;
+			break;
+		default:
+			brush_.updateOnKeyPress(key);
+			break;
 	}
 }
 
