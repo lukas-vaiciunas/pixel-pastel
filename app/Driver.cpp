@@ -75,7 +75,7 @@ void Driver::updateOnKeyPress(sf::Keyboard::Key key)
 			canvas_.toggleGrid();
 			break;
 		case sf::Keyboard::Key::S:
-			canvas_.save("./output/test.png");
+			this->startSaveDialog_();
 			break;
 		case sf::Keyboard::Key::L:
 			this->startOpenDialog_();
@@ -152,6 +152,25 @@ void Driver::startOpenDialog_()
 		canvas_.load(outPath);
 
 		NFD_FreePath(outPath);
+	}
+
+	NFD_Quit();
+}
+
+void Driver::startSaveDialog_()
+{
+	NFD_Init();
+
+	nfdchar_t *savePath;
+	nfdfilteritem_t filterItem[1] = { {"PNG file (.png)", "png"} };
+
+	nfdresult_t result = NFD_SaveDialog(&savePath, filterItem, 1, NULL, "Untitled.png");
+
+	if (result == NFD_OKAY)
+	{
+		canvas_.save(savePath);
+
+		NFD_FreePath(savePath);
 	}
 
 	NFD_Quit();

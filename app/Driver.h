@@ -33,6 +33,7 @@ private:
 	void resetCamera_();
 
 	void startOpenDialog_();
+	void startSaveDialog_();
 
 	void drawCameraTransform_(
 		sf::RenderTarget &target,
