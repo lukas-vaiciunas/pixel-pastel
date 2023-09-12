@@ -152,6 +152,7 @@
     <ClInclude Include="EventType.h" />
     <ClInclude Include="Listener.h" />
     <ClInclude Include="LodePNG.h" />
+    <ClInclude Include="ModifierKeys.h" />
     <ClInclude Include="Palette.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

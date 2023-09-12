@@ -26,9 +26,9 @@ private:
 	Palette palette_;
 	Camera camera_;
 
-	sf::Vector2i mousePosition_;
+	uint8_t modifierKeys_;
 
-	bool isAltPressed_;
+	sf::Vector2i mousePosition_;
 
 	void resetCamera_();
 

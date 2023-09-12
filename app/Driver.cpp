@@ -1,4 +1,5 @@
 #include "Driver.h"
+#include "ModifierKeys.h"
 #include "Config.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -9,7 +10,7 @@ Driver::Driver() :
 	palette_(),
 	camera_(),
 	mousePosition_(0, 0),
-	isAltPressed_(false)
+	modifierKeys_(ModifierKeys::None)
 {
 	this->resetCamera_();
 
@@ -27,7 +28,7 @@ void Driver::updateOnMouseMove(int mouseX, int mouseY)
 		canvas_,
 		camera_.getPosition(),
 		camera_.getZoom(),
-		isAltPressed_);
+		modifierKeys_);
 
 	mousePosition_.x = mouseX;
 	mousePosition_.y = mouseY;
@@ -47,12 +48,12 @@ void Driver::updateOnMouseButtonPress(sf::Mouse::Button button)
 	brush_.updateOnMouseButtonPress(
 		button,
 		canvas_,
-		isAltPressed_);
+		modifierKeys_);
 
 	palette_.updateOnMousePress(
 		button,
 		mousePosition_.x, mousePosition_.y,
-		isAltPressed_);
+		modifierKeys_);
 }
 
 void Driver::updateOnMouseButtonRelease(sf::Mouse::Button button)
@@ -78,26 +79,37 @@ void Driver::updateOnKeyPress(sf::Keyboard::Key key)
 		case sf::Keyboard::Key::L:
 			canvas_.load("./output/test.png");
 			break;
+		case sf::Keyboard::Key::LControl:
+		case sf::Keyboard::Key::RControl:
+			modifierKeys_ |= ModifierKeys::Control;
+			break;
 		case sf::Keyboard::Key::LAlt:
 		case sf::Keyboard::Key::RAlt:
-			isAltPressed_ = true;
+			modifierKeys_ |= ModifierKeys::Alt;
 			break;
-		default:
-			brush_.updateOnKeyPress(key);
+		case sf::Keyboard::Key::LShift:
+		case sf::Keyboard::Key::RShift:
+			modifierKeys_ |= ModifierKeys::Shift;
 			break;
 	}
 }
 
 void Driver::updateOnKeyRelease(sf::Keyboard::Key key)
 {
-	if (key == sf::Keyboard::Key::LAlt
-		|| key == sf::Keyboard::Key::RAlt)
-		{
-			isAltPressed_ = false;
-	}
-	else
+	switch (key)
 	{
-		brush_.updateOnKeyRelease(key);
+		case sf::Keyboard::Key::LControl:
+		case sf::Keyboard::Key::RControl:
+			modifierKeys_ &= ~ModifierKeys::Control;
+			break;
+		case sf::Keyboard::Key::LAlt:
+		case sf::Keyboard::Key::RAlt:
+			modifierKeys_ &= ~ModifierKeys::Alt;
+			break;
+		case sf::Keyboard::Key::LShift:
+		case sf::Keyboard::Key::RShift:
+			modifierKeys_ &= ~ModifierKeys::Shift;
+			break;
 	}
 }
 

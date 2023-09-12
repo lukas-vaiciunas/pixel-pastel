@@ -1,6 +1,7 @@
 #include "Brush.h"
 #include "Canvas.h"
 #include "Event.h"
+#include "ModifierKeys.h"
 
 Brush::Brush() :
 	Listener(
@@ -12,9 +13,7 @@ Brush::Brush() :
 	secondaryColor_(255, 255, 255, 0),
 	isInBounds_(false),
 	isLeftMouseButtonPressed_(false),
-	isRightMouseButtonPressed_(false),
-	isControlPressed_(false),
-	isShiftPressed_(false)
+	isRightMouseButtonPressed_(false)
 {}
 
 void Brush::onEvent(const Event &ev)
@@ -36,7 +35,7 @@ void Brush::updateOnMouseMove(
 	Canvas &canvas,
 	const sf::Vector2f &cameraPosition,
 	float cameraZoom,
-	bool isAltPressed)
+	uint8_t modifierKeys)
 {
 	const sf::Vector2u &canvasSize = canvas.getSize();
 	const unsigned int canvasCellSize = canvas.getCellSize();
@@ -55,7 +54,7 @@ void Brush::updateOnMouseMove(
 
 	if (isLeftMouseButtonPressed_)
 	{
-		this->onLeftMouseButton_(canvas, isAltPressed);
+		this->onLeftMouseButton_(canvas, modifierKeys);
 	}
 	if (isRightMouseButtonPressed_)
 	{
@@ -66,13 +65,13 @@ void Brush::updateOnMouseMove(
 void Brush::updateOnMouseButtonPress(
 	sf::Mouse::Button button,
 	Canvas &canvas,
-	bool isAltPressed)
+	uint8_t modifierKeys)
 {
 	if (button == sf::Mouse::Button::Left)
 	{
 		isLeftMouseButtonPressed_ = true;
 
-		this->onLeftMouseButton_(canvas, isAltPressed);
+		this->onLeftMouseButton_(canvas, modifierKeys);
 	}
 	else if (button == sf::Mouse::Button::Right)
 	{
@@ -94,48 +93,20 @@ void Brush::updateOnMouseButtonRelease(sf::Mouse::Button button)
 	}
 }
 
-void Brush::updateOnKeyPress(sf::Keyboard::Key key)
-{
-	if (key == sf::Keyboard::Key::LControl
-		|| key == sf::Keyboard::Key::RControl)
-	{
-		isControlPressed_ = true;
-	}
-	else if (key == sf::Keyboard::Key::LShift
-		|| key == sf::Keyboard::Key::RShift)
-	{
-		isShiftPressed_ = true;
-	}
-}
-
-void Brush::updateOnKeyRelease(sf::Keyboard::Key key)
-{
-	if (key == sf::Keyboard::Key::LControl
-		|| key == sf::Keyboard::Key::RControl)
-	{
-		isControlPressed_ = false;
-	}
-	else if (key == sf::Keyboard::Key::LShift
-		|| key == sf::Keyboard::Key::RShift)
-	{
-		isShiftPressed_ = false;
-	}
-}
-
-void Brush::onLeftMouseButton_(Canvas &canvas, bool isAltPressed)
+void Brush::onLeftMouseButton_(Canvas &canvas, uint8_t modifierKeys)
 {
 	if (!isInBounds_)
 	{
 		return;
 	}
 
-	sf::Color &color = (isAltPressed ? secondaryColor_ : primaryColor_);
+	sf::Color &color = (modifierKeys & ModifierKeys::Alt ? secondaryColor_ : primaryColor_);
 
-	if (isControlPressed_)
+	if (modifierKeys & ModifierKeys::Control)
 	{
 		this->pick_(canvas, color);
 	}
-	else if (isShiftPressed_)
+	else if (modifierKeys & ModifierKeys::Shift)
 	{
 		this->fill_(canvas, color);
 	}

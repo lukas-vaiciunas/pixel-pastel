@@ -12,7 +12,7 @@ public:
 	void updateOnMousePress(
 		sf::Mouse::Button button,
 		int mouseX, int mouseY,
-		bool isAltPressed);
+		uint8_t modifierKeys);
 
 	void load(const std::string &string);
 

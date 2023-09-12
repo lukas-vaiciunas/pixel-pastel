@@ -1,6 +1,7 @@
 #include "Palette.h"
 #include "Event.h"
 #include "EventQueue.h"
+#include "ModifierKeys.h"
 #include "Config.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <fstream>
@@ -16,7 +17,7 @@ Palette::Palette() :
 void Palette::updateOnMousePress(
 	sf::Mouse::Button button,
 	int mouseX, int mouseY,
-	bool isAltPressed)
+	uint8_t modifierKeys)
 {
 	if (button != sf::Mouse::Button::Left)
 	{
@@ -45,7 +46,7 @@ void Palette::updateOnMousePress(
 
 	unsigned int width = numCols_ * 6;
 
-	if (isAltPressed)
+	if (modifierKeys & ModifierKeys::Alt)
 	{
 		EventQueue::getInstance().send(
 			new EventSetBrushSecondaryColor(
