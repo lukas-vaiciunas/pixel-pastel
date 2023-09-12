@@ -44,23 +44,7 @@ void Canvas::load(const std::string &filePath)
 
 	lodepng::decode(buffer, size_.x, size_.y, filePath);
 
-	this->init_();
-
-	const unsigned int numColors = size_.x * size_.y;
-
-	for (unsigned int i = 0; i < numColors; ++i)
-	{
-		const unsigned int bufferBase = i * 4;
-		const unsigned int vertexBase = i * 6;
-
-		this->setColor_(
-			vertexBase,
-			sf::Color(
-				buffer[bufferBase],
-				buffer[bufferBase + 1],
-				buffer[bufferBase + 2],
-				buffer[bufferBase + 3]));
-	}
+	this->init_(buffer);
 }
 
 void Canvas::save(const std::string &filePath)
@@ -159,6 +143,20 @@ unsigned int Canvas::getCellSize() const
 
 void Canvas::init_()
 {
+	this->initCanvas_();
+	this->initOutline_();
+	this->initGrid_();
+}
+
+void Canvas::init_(const std::vector<unsigned char> &colors)
+{
+	this->initCanvas_(colors);
+	this->initOutline_();
+	this->initGrid_();
+}
+
+void Canvas::initCanvas_()
+{
 	vertices_.clear();
 	transparencyVertices_.clear();
 
@@ -168,66 +166,90 @@ void Canvas::init_()
 	{
 		for (unsigned int x = 0; x < size_.x; ++x)
 		{
-			float cellSize = static_cast<float>(cellSize_);
-
-			const sf::Vector2f position(
-				x * cellSize,
-				y * cellSize);
-
-			this->addQuad_(
-				vertices_,
-				position,
-				sf::Vector2f(position.x + cellSize, position.y + cellSize),
-				fillColor);
-
-			// Transparency
-
-			transparencyVertices_.append(
-				sf::Vertex(
-					sf::Vector2f(
-						position.x,
-						position.y),
-					sf::Vector2f(0.0f, 0.0f)));
-
-			transparencyVertices_.append(
-				sf::Vertex(
-					sf::Vector2f(
-						position.x + cellSize,
-						position.y),
-					sf::Vector2f(cellSize, 0.0f)));
-
-			transparencyVertices_.append(
-				sf::Vertex(
-					sf::Vector2f(
-						position.x,
-						position.y + cellSize),
-					sf::Vector2f(0.0f, cellSize)));
-
-			transparencyVertices_.append(
-				sf::Vertex(
-					sf::Vector2f(
-						position.x,
-						position.y + cellSize),
-					sf::Vector2f(0.0f, cellSize)));
-
-			transparencyVertices_.append(
-				sf::Vertex(
-					sf::Vector2f(
-						position.x + cellSize,
-						position.y),
-					sf::Vector2f(cellSize, 0.0f)));
-
-			transparencyVertices_.append(
-				sf::Vertex(
-					sf::Vector2f(
-						position.x + cellSize,
-						position.y + cellSize),
-					sf::Vector2f(cellSize, cellSize)));
+			this->initCanvasHelper_(x, y, fillColor);
 		}
 	}
+}
 
-	this->initOutline_();
-	this->initGrid_();
+void Canvas::initCanvas_(const std::vector<unsigned char> &colors)
+{
+	vertices_.clear();
+	transparencyVertices_.clear();
+
+	for (unsigned int y = 0; y < size_.y; ++y)
+	{
+		for (unsigned int x = 0; x < size_.x; ++x)
+		{
+			const unsigned int colorBase = this->spatialHash_(x, y) * 4;
+
+			this->initCanvasHelper_(
+				x, y,
+				sf::Color(
+					colors[colorBase],
+					colors[colorBase + 1],
+					colors[colorBase + 2],
+					colors[colorBase + 3]));
+		}
+	}
+}
+
+void Canvas::initCanvasHelper_(unsigned int x, unsigned int y, const sf::Color &color)
+{
+	const float cellSize = static_cast<float>(cellSize_);
+
+	const sf::Vector2f pixelPosition(
+		x * cellSize,
+		y * cellSize);
+
+	this->addQuad_(
+		vertices_,
+		pixelPosition,
+		sf::Vector2f(pixelPosition.x + cellSize, pixelPosition.y + cellSize),
+		color);
+
+	// Transparency
+
+	transparencyVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				pixelPosition.x,
+				pixelPosition.y),
+			sf::Vector2f(0.0f, 0.0f)));
+
+	transparencyVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				pixelPosition.x + cellSize,
+				pixelPosition.y),
+			sf::Vector2f(cellSize, 0.0f)));
+
+	transparencyVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				pixelPosition.x,
+				pixelPosition.y + cellSize),
+			sf::Vector2f(0.0f, cellSize)));
+
+	transparencyVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				pixelPosition.x,
+				pixelPosition.y + cellSize),
+			sf::Vector2f(0.0f, cellSize)));
+
+	transparencyVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				pixelPosition.x + cellSize,
+				pixelPosition.y),
+			sf::Vector2f(cellSize, 0.0f)));
+
+	transparencyVertices_.append(
+		sf::Vertex(
+			sf::Vector2f(
+				pixelPosition.x + cellSize,
+				pixelPosition.y + cellSize),
+			sf::Vector2f(cellSize, cellSize)));
 }
 
 void Canvas::initOutline_()

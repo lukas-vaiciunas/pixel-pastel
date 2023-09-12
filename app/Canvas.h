@@ -47,6 +47,10 @@ private:
 	bool isGridActive_;
 
 	void init_();
+	void init_(const std::vector<unsigned char> &colors);
+	void initCanvas_();
+	void initCanvas_(const std::vector<unsigned char> &colors);
+	void initCanvasHelper_(unsigned int x, unsigned int y, const sf::Color &color);
 	void initOutline_();
 	void initGrid_();
 
