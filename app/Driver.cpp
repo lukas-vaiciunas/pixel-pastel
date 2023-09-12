@@ -8,7 +8,8 @@ Driver::Driver() :
 	brush_(),
 	palette_(),
 	camera_(),
-	mousePosition_(0, 0)
+	mousePosition_(0, 0),
+	isAltPressed_(false)
 {
 	this->resetCamera_();
 
@@ -25,7 +26,8 @@ void Driver::updateOnMouseMove(int mouseX, int mouseY)
 		mouseX, mouseY,
 		canvas_,
 		camera_.getPosition(),
-		camera_.getZoom());
+		camera_.getZoom(),
+		isAltPressed_);
 
 	mousePosition_.x = mouseX;
 	mousePosition_.y = mouseY;
@@ -44,11 +46,13 @@ void Driver::updateOnMouseButtonPress(sf::Mouse::Button button)
 
 	brush_.updateOnMouseButtonPress(
 		button,
-		canvas_);
+		canvas_,
+		isAltPressed_);
 
 	palette_.updateOnMousePress(
 		button,
-		mousePosition_.x, mousePosition_.y);
+		mousePosition_.x, mousePosition_.y,
+		isAltPressed_);
 }
 
 void Driver::updateOnMouseButtonRelease(sf::Mouse::Button button)
@@ -76,6 +80,11 @@ void Driver::updateOnKeyPress(sf::Keyboard::Key key)
 	{
 		canvas_.load("./output/test.png");
 	}
+	else if (key == sf::Keyboard::Key::LAlt
+		|| key == sf::Keyboard::Key::RAlt)
+	{
+		isAltPressed_ = true;
+	}
 	else
 	{
 		brush_.updateOnKeyPress(key);
@@ -84,7 +93,15 @@ void Driver::updateOnKeyPress(sf::Keyboard::Key key)
 
 void Driver::updateOnKeyRelease(sf::Keyboard::Key key)
 {
-	brush_.updateOnKeyRelease(key);
+	if (key == sf::Keyboard::Key::LAlt
+		|| key == sf::Keyboard::Key::RAlt)
+		{
+			isAltPressed_ = false;
+	}
+	else
+	{
+		brush_.updateOnKeyRelease(key);
+	}
 }
 
 void Driver::draw(

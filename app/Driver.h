@@ -28,6 +28,8 @@ private:
 
 	sf::Vector2i mousePosition_;
 
+	bool isAltPressed_;
+
 	void resetCamera_();
 
 	void drawCameraTransform_(

@@ -20,11 +20,27 @@ private:
 	EventType type_;
 };
 
-class EventSetBrushColor : public Event
+class EventSetBrushPrimaryColor : public Event
 {
 public:
-	EventSetBrushColor(const sf::Color &color) :
-		Event(EventType::SetBrushColor),
+	EventSetBrushPrimaryColor(const sf::Color &color) :
+		Event(EventType::SetBrushPrimaryColor),
+		color_(color)
+	{}
+
+	const sf::Color &getColor() const
+	{
+		return color_;
+	}
+private:
+	sf::Color color_;
+};
+
+class EventSetBrushSecondaryColor : public Event
+{
+public:
+	EventSetBrushSecondaryColor(const sf::Color &color) :
+		Event(EventType::SetBrushSecondaryColor),
 		color_(color)
 	{}
 

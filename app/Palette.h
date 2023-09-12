@@ -11,7 +11,8 @@ public:
 
 	void updateOnMousePress(
 		sf::Mouse::Button button,
-		int mouseX, int mouseY);
+		int mouseX, int mouseY,
+		bool isAltPressed);
 
 	void load(const std::string &string);
 

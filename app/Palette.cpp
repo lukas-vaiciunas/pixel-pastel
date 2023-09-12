@@ -1,8 +1,8 @@
 #include "Palette.h"
 #include "Event.h"
 #include "EventQueue.h"
-#include <SFML/Graphics/RenderTarget.hpp>
 #include "Config.h"
+#include <SFML/Graphics/RenderTarget.hpp>
 #include <fstream>
 #include <sstream>
 
@@ -15,7 +15,8 @@ Palette::Palette() :
 
 void Palette::updateOnMousePress(
 	sf::Mouse::Button button,
-	int mouseX, int mouseY)
+	int mouseX, int mouseY,
+	bool isAltPressed)
 {
 	if (button != sf::Mouse::Button::Left)
 	{
@@ -44,9 +45,18 @@ void Palette::updateOnMousePress(
 
 	unsigned int width = numCols_ * 6;
 
-	EventQueue::getInstance().send(
-		new EventSetBrushColor(
-			vertices_[palettePosition.x * 6 + palettePosition.y * width].color));
+	if (isAltPressed)
+	{
+		EventQueue::getInstance().send(
+			new EventSetBrushSecondaryColor(
+				vertices_[palettePosition.x * 6 + palettePosition.y * width].color));
+	}
+	else
+	{
+		EventQueue::getInstance().send(
+			new EventSetBrushPrimaryColor(
+				vertices_[palettePosition.x * 6 + palettePosition.y * width].color));
+	}
 }
 
 void Palette::load(const std::string &string)

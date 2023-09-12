@@ -4,5 +4,6 @@
 
 enum class EventType : uint8_t
 {
-	SetBrushColor
+	SetBrushPrimaryColor,
+	SetBrushSecondaryColor
 };

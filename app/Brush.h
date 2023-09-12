@@ -18,11 +18,13 @@ public:
 		int mouseX, int mouseY,
 		Canvas &canvas,
 		const sf::Vector2f &cameraPosition,
-		float cameraZoom);
+		float cameraZoom,
+		bool isAltPressed);
 
 	void updateOnMouseButtonPress(
 		sf::Mouse::Button button,
-		Canvas &canvas);
+		Canvas &canvas,
+		bool isAltPressed);
 
 	void updateOnMouseButtonRelease(sf::Mouse::Button button);
 
@@ -30,7 +32,8 @@ public:
 
 	void updateOnKeyRelease(sf::Keyboard::Key key);
 private:
-	sf::Color color_;
+	sf::Color primaryColor_;
+	sf::Color secondaryColor_;
 
 	sf::Vector2u canvasPosition_;
 
@@ -42,11 +45,11 @@ private:
 	bool isControlPressed_;
 	bool isShiftPressed_;
 
-	void onLeftMouseButton_(Canvas &canvas);
+	void onLeftMouseButton_(Canvas &canvas, bool isAltPressed);
 	void onRightMouseButton_(Canvas &canvas);
 
-	void paint_(Canvas &canvas);
-	void fill_(Canvas &canvas);
+	void paint_(Canvas &canvas, const sf::Color &color);
+	void fill_(Canvas &canvas, const sf::Color &color);
 	void erase_(Canvas &canvas);
-	void pick_(const Canvas &canvas);
+	void pick_(const Canvas &canvas, sf::Color &color);
 };
