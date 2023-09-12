@@ -24,4 +24,11 @@ private:
 
 	unsigned int numCols_;
 	unsigned int boxSize_;
+	float boxGap_;
+
+	void addQuad_(
+		sf::VertexArray &vertices,
+		const sf::Vector2f &minPosition,
+		const sf::Vector2f &maxPosition,
+		const sf::Color &color);
 };

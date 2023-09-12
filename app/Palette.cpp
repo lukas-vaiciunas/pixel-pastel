@@ -11,7 +11,8 @@ Palette::Palette() :
 	sf::Drawable(),
 	vertices_(sf::Triangles),
 	numCols_(0),
-	boxSize_(32)
+	boxSize_(32),
+	boxGap_(8.0f)
 {}
 
 void Palette::updateOnMousePress(
@@ -24,7 +25,7 @@ void Palette::updateOnMousePress(
 		return;
 	}
 
-	float invInterfaceScale = 1.0f / Config::Interface::scale;
+	const float invInterfaceScale = 1.0f / Config::Interface::scale;
 
 	const sf::Vector2f relativeMousePosition(
 		mouseX * invInterfaceScale,
@@ -32,19 +33,31 @@ void Palette::updateOnMousePress(
 
 	const sf::FloatRect verticesBounds = vertices_.getBounds();
 
-	if (relativeMousePosition.x < 0.0f
-		|| relativeMousePosition.x >= verticesBounds.width
-		|| relativeMousePosition.y < 0.0f
-		|| relativeMousePosition.y >= verticesBounds.height)
+	if (relativeMousePosition.x < boxGap_
+		|| relativeMousePosition.x >= verticesBounds.width + boxGap_
+		|| relativeMousePosition.y < boxGap_
+		|| relativeMousePosition.y >= verticesBounds.height + boxGap_)
 	{
 		return;
 	}
 
-	sf::Vector2u palettePosition(
-		static_cast<unsigned int>(relativeMousePosition.x / boxSize_),
-		static_cast<unsigned int>(relativeMousePosition.y / boxSize_));
+	const float boxOffset = boxSize_ + boxGap_;
 
-	unsigned int width = numCols_ * 6;
+	const sf::Vector2f paletteRatio(
+		(relativeMousePosition.x - boxGap_) / boxOffset,
+		(relativeMousePosition.y - boxGap_) / boxOffset);
+
+	const float offsetMinRatio = boxSize_ / boxOffset;
+
+	if (paletteRatio.x - floorf(paletteRatio.x) > offsetMinRatio
+		|| paletteRatio.y - floorf(paletteRatio.y) > offsetMinRatio)
+	{
+		return;
+	}
+
+	const sf::Vector2u palettePosition(paletteRatio);
+
+	const unsigned int width = numCols_ * 6;
 
 	if (modifierKeys & ModifierKeys::Alt)
 	{
@@ -79,6 +92,8 @@ void Palette::load(const std::string &string)
 
 	numCols_ = std::stoi(line);
 
+	const float boxOffset = boxSize_ + boxGap_;
+
 	unsigned int col = 0;
 	unsigned int row = 0;
 
@@ -96,50 +111,18 @@ void Palette::load(const std::string &string)
 		const sf::Color color(r, g, b);
 
 		const sf::Vector2f position(
-			static_cast<float>(col * boxSize_),
-			static_cast<float>(row * boxSize_));
+			boxGap_ + col * boxOffset,
+			boxGap_ + row * boxOffset);
 
-		vertices_.append(
-			sf::Vertex(
-				sf::Vector2f(
-					position.x,
-					position.y),
-				color));
-
-		vertices_.append(
-			sf::Vertex(
-				sf::Vector2f(
-					position.x + boxSize_,
-					position.y),
-				color));
-
-		vertices_.append(
-			sf::Vertex(
-				sf::Vector2f(
-					position.x,
-					position.y + boxSize_),
-				color));
-
-		vertices_.append(
-			sf::Vertex(
-				sf::Vector2f(
-					position.x,
-					position.y + boxSize_),
-				color));
-
-		vertices_.append(
-			sf::Vertex(
-				sf::Vector2f(
-					position.x + boxSize_,
-					position.y),
-				color));
-
-		vertices_.append(
-			sf::Vertex(
-				sf::Vector2f(
-					position.x + boxSize_,
-					position.y + boxSize_),
-				color));
+		this->addQuad_(
+			vertices_,
+			sf::Vector2f(
+				position.x,
+				position.y),
+			sf::Vector2f(
+				position.x + boxSize_,
+				position.y + boxSize_),
+			color);
 
 		if (++col >= numCols_)
 		{
@@ -156,4 +139,49 @@ void Palette::draw(
 	sf::RenderStates states) const
 {
 	target.draw(vertices_, states);
+}
+
+void Palette::addQuad_(
+	sf::VertexArray &vertices,
+	const sf::Vector2f &minPosition,
+	const sf::Vector2f &maxPosition,
+	const sf::Color &color)
+{
+	vertices.append(
+		sf::Vertex(
+			minPosition,
+			color));
+
+	vertices.append(
+		sf::Vertex(
+			sf::Vector2f(
+				maxPosition.x,
+				minPosition.y),
+			color));
+
+	vertices.append(
+		sf::Vertex(
+			sf::Vector2f(
+				minPosition.x,
+				maxPosition.y),
+			color));
+
+	vertices.append(
+		sf::Vertex(
+			sf::Vector2f(
+				minPosition.x,
+				maxPosition.y),
+			color));
+
+	vertices.append(
+		sf::Vertex(
+			sf::Vector2f(
+				maxPosition.x,
+				minPosition.y),
+			color));
+
+	vertices.append(
+		sf::Vertex(
+			maxPosition,
+			color));
 }
