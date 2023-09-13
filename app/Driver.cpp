@@ -6,6 +6,7 @@
 
 Driver::Driver() :
 	sf::Drawable(),
+	threadPool_(),
 	canvas_(sf::Vector2u(32, 32)),
 	brush_(),
 	palette_(),
@@ -13,9 +14,16 @@ Driver::Driver() :
 	mousePosition_(0, 0),
 	modifierKeys_(ModifierKeys::None)
 {
-	this->resetCamera_();
+	threadPool_.start();
 
 	palette_.load("./palettes/pico-8.txt");
+
+	this->resetCamera_();
+}
+
+Driver::~Driver()
+{
+	threadPool_.stop();
 }
 
 void Driver::updateOnMouseMove(int mouseX, int mouseY)
@@ -75,11 +83,10 @@ void Driver::updateOnKeyPress(sf::Keyboard::Key key)
 			canvas_.toggleGrid();
 			break;
 		case sf::Keyboard::Key::S:
-			this->startSaveDialog_();
+			threadPool_.push(std::bind(&Driver::startSaveDialog_, this));
 			break;
 		case sf::Keyboard::Key::L:
-			this->startOpenDialog_();
-			this->resetCamera_();
+			threadPool_.push(std::bind(&Driver::startOpenDialog_, this));
 			break;
 		case sf::Keyboard::Key::LControl:
 		case sf::Keyboard::Key::RControl:
@@ -150,6 +157,7 @@ void Driver::startOpenDialog_()
 	if (result == NFD_OKAY)
 	{
 		canvas_.load(outPath);
+		this->resetCamera_();
 
 		NFD_FreePath(outPath);
 	}

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ThreadPool.h"
 #include "Canvas.h"
 #include "Brush.h"
 #include "Palette.h"
@@ -9,6 +10,8 @@ class Driver : public sf::Drawable
 {
 public:
 	Driver();
+
+	~Driver();
 
 	void updateOnMouseMove(int mouseX, int mouseY);
 	void updateOnMouseWheelScroll(float delta);
@@ -21,6 +24,8 @@ public:
 		sf::RenderTarget &target,
 		sf::RenderStates states) const override;
 private:
+	ThreadPool threadPool_;
+
 	Canvas canvas_;
 	Brush brush_;
 	Palette palette_;
