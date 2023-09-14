@@ -121,39 +121,18 @@ void Palette::load(const std::string &string)
 
 		FreeFunctions::addQuad(
 			vertices_,
-			sf::Vector2f(
-				position.x,
-				position.y),
+			position,
 			sf::Vector2f(
 				position.x + boxSize_,
 				position.y + boxSize_),
 			color);
 
-		// Outline
-
-		FreeFunctions::addQuad(
+		FreeFunctions::addOutline(
 			outlineVertices_,
-			sf::Vector2f(position.x - outlineThickness, position.y - outlineThickness),
-			sf::Vector2f(position.x + boxSize_ + outlineThickness, position.y),
-			outlineColor);
-
-		FreeFunctions::addQuad(
-			outlineVertices_,
-			sf::Vector2f(position.x - outlineThickness, position.y + boxSize_),
-			sf::Vector2f(position.x + boxSize_ + outlineThickness, position.y + boxSize_ + outlineThickness),
-			outlineColor);
-
-		FreeFunctions::addQuad(
-			outlineVertices_,
-			sf::Vector2f(position.x - outlineThickness, position.y),
-			sf::Vector2f(position.x, position.y + boxSize_),
-			outlineColor);
-
-		FreeFunctions::addQuad(
-			outlineVertices_,
-			sf::Vector2f(position.x + boxSize_, position.y),
-			sf::Vector2f(position.x + boxSize_ + outlineThickness, position.y + boxSize_),
-			outlineColor);
+			position,
+			sf::Vector2f(position.x + boxSize_, position.y + boxSize_),
+			outlineColor,
+			outlineThickness);
 
 		if (++col >= numCols_)
 		{

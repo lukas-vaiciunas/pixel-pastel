@@ -261,38 +261,13 @@ void Canvas::initOutline_()
 	const float thickness = 1.0f;
 	unsigned int width = size_.x * cellSize_;
 	unsigned int height = size_.y * cellSize_;
-	
-	// Top
 
-	FreeFunctions::addQuad(
+	FreeFunctions::addOutline(
 		outlineVertices_,
-		sf::Vector2f(-thickness, -thickness),
-		sf::Vector2f(width + thickness, thickness),
-		color);
-
-	// Bottom
-
-	FreeFunctions::addQuad(
-		outlineVertices_,
-		sf::Vector2f(-thickness, height - thickness),
-		sf::Vector2f(width + thickness, height + thickness),
-		color);
-
-	// Left
-
-	FreeFunctions::addQuad(
-		outlineVertices_,
-		sf::Vector2f(-thickness, thickness),
-		sf::Vector2f(thickness, height - thickness),
-		color);
-
-	// Right
-
-	FreeFunctions::addQuad(
-		outlineVertices_,
-		sf::Vector2f(width - thickness, thickness),
-		sf::Vector2f(width + thickness, height - thickness),
-		color);
+		sf::Vector2f(0.0f, 0.0f),
+		sf::Vector2f(size_ * cellSize_),
+		color,
+		1.0f);
 }
 
 void Canvas::initGrid_()
