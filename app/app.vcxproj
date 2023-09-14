@@ -136,6 +136,7 @@
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="Driver.cpp" />
     <ClCompile Include="EventQueue.cpp" />
+    <ClCompile Include="FreeFunctions.cpp" />
     <ClCompile Include="Listener.cpp" />
     <ClCompile Include="LodePNG.cpp" />
     <ClCompile Include="main.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventQueue.h" />
     <ClInclude Include="EventType.h" />
+    <ClInclude Include="FreeFunctions.h" />
     <ClInclude Include="Listener.h" />
     <ClInclude Include="LodePNG.h" />
     <ClInclude Include="ModifierKeys.h" />

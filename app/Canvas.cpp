@@ -1,4 +1,5 @@
 #include "Canvas.h"
+#include "FreeFunctions.h"
 #include "LodePNG.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -201,7 +202,7 @@ void Canvas::initCanvasHelper_(unsigned int x, unsigned int y, const sf::Color &
 		x * cellSize,
 		y * cellSize);
 
-	this->addQuad_(
+	FreeFunctions::addQuad(
 		vertices_,
 		pixelPosition,
 		sf::Vector2f(pixelPosition.x + cellSize, pixelPosition.y + cellSize),
@@ -263,7 +264,7 @@ void Canvas::initOutline_()
 	
 	// Top
 
-	this->addQuad_(
+	FreeFunctions::addQuad(
 		outlineVertices_,
 		sf::Vector2f(-thickness, -thickness),
 		sf::Vector2f(width + thickness, thickness),
@@ -271,7 +272,7 @@ void Canvas::initOutline_()
 
 	// Bottom
 
-	this->addQuad_(
+	FreeFunctions::addQuad(
 		outlineVertices_,
 		sf::Vector2f(-thickness, height - thickness),
 		sf::Vector2f(width + thickness, height + thickness),
@@ -279,7 +280,7 @@ void Canvas::initOutline_()
 
 	// Left
 
-	this->addQuad_(
+	FreeFunctions::addQuad(
 		outlineVertices_,
 		sf::Vector2f(-thickness, thickness),
 		sf::Vector2f(thickness, height - thickness),
@@ -287,7 +288,7 @@ void Canvas::initOutline_()
 
 	// Right
 
-	this->addQuad_(
+	FreeFunctions::addQuad(
 		outlineVertices_,
 		sf::Vector2f(width - thickness, thickness),
 		sf::Vector2f(width + thickness, height - thickness),
@@ -310,7 +311,7 @@ void Canvas::initGrid_()
 
 	for (unsigned int x = cellWidth; x < size_.x; x += cellWidth)
 	{
-		this->addQuad_(
+		FreeFunctions::addQuad(
 			gridVertices_,
 			sf::Vector2f(
 				x * cellSize_ - halfThickness,
@@ -323,7 +324,7 @@ void Canvas::initGrid_()
 
 	for (unsigned int y = cellHeight; y < size_.y; y += cellHeight)
 	{
-		this->addQuad_(
+		FreeFunctions::addQuad(
 			gridVertices_,
 			sf::Vector2f(
 				0.0f,
@@ -333,51 +334,6 @@ void Canvas::initGrid_()
 				y * cellSize_ + halfThickness),
 			fillColor);
 	}
-}
-
-void Canvas::addQuad_(
-	sf::VertexArray &vertices,
-	const sf::Vector2f &minPosition,
-	const sf::Vector2f &maxPosition,
-	const sf::Color &color)
-{
-	vertices.append(
-		sf::Vertex(
-			minPosition,
-			color));
-
-	vertices.append(
-		sf::Vertex(
-			sf::Vector2f(
-				maxPosition.x,
-				minPosition.y),
-			color));
-
-	vertices.append(
-		sf::Vertex(
-			sf::Vector2f(
-				minPosition.x,
-				maxPosition.y),
-			color));
-
-	vertices.append(
-		sf::Vertex(
-			sf::Vector2f(
-				minPosition.x,
-				maxPosition.y),
-			color));
-
-	vertices.append(
-		sf::Vertex(
-			sf::Vector2f(
-				maxPosition.x,
-				minPosition.y),
-			color));
-
-	vertices.append(
-		sf::Vertex(
-			maxPosition,
-			color));
 }
 
 void Canvas::setColor_(

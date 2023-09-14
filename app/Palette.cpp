@@ -1,4 +1,5 @@
 #include "Palette.h"
+#include "FreeFunctions.h"
 #include "Event.h"
 #include "EventQueue.h"
 #include "ModifierKeys.h"
@@ -9,8 +10,8 @@
 
 Palette::Palette() :
 	sf::Drawable(),
-	vertices_(sf::Triangles),
-	outlineVertices_(sf::Triangles),
+	vertices_(sf::PrimitiveType::Triangles),
+	outlineVertices_(sf::PrimitiveType::Triangles),
 	numCols_(0),
 	boxSize_(32),
 	boxGap_(8.0f)
@@ -118,7 +119,7 @@ void Palette::load(const std::string &string)
 			boxGap_ + col * boxOffset,
 			boxGap_ + row * boxOffset);
 
-		this->addQuad_(
+		FreeFunctions::addQuad(
 			vertices_,
 			sf::Vector2f(
 				position.x,
@@ -130,25 +131,25 @@ void Palette::load(const std::string &string)
 
 		// Outline
 
-		this->addQuad_(
+		FreeFunctions::addQuad(
 			outlineVertices_,
 			sf::Vector2f(position.x - outlineThickness, position.y - outlineThickness),
 			sf::Vector2f(position.x + boxSize_ + outlineThickness, position.y),
 			outlineColor);
 
-		this->addQuad_(
+		FreeFunctions::addQuad(
 			outlineVertices_,
 			sf::Vector2f(position.x - outlineThickness, position.y + boxSize_),
 			sf::Vector2f(position.x + boxSize_ + outlineThickness, position.y + boxSize_ + outlineThickness),
 			outlineColor);
 
-		this->addQuad_(
+		FreeFunctions::addQuad(
 			outlineVertices_,
 			sf::Vector2f(position.x - outlineThickness, position.y),
 			sf::Vector2f(position.x, position.y + boxSize_),
 			outlineColor);
 
-		this->addQuad_(
+		FreeFunctions::addQuad(
 			outlineVertices_,
 			sf::Vector2f(position.x + boxSize_, position.y),
 			sf::Vector2f(position.x + boxSize_ + outlineThickness, position.y + boxSize_),
@@ -170,49 +171,4 @@ void Palette::draw(
 {
 	target.draw(outlineVertices_, states);
 	target.draw(vertices_, states);
-}
-
-void Palette::addQuad_(
-	sf::VertexArray &vertices,
-	const sf::Vector2f &minPosition,
-	const sf::Vector2f &maxPosition,
-	const sf::Color &color)
-{
-	vertices.append(
-		sf::Vertex(
-			minPosition,
-			color));
-
-	vertices.append(
-		sf::Vertex(
-			sf::Vector2f(
-				maxPosition.x,
-				minPosition.y),
-			color));
-
-	vertices.append(
-		sf::Vertex(
-			sf::Vector2f(
-				minPosition.x,
-				maxPosition.y),
-			color));
-
-	vertices.append(
-		sf::Vertex(
-			sf::Vector2f(
-				minPosition.x,
-				maxPosition.y),
-			color));
-
-	vertices.append(
-		sf::Vertex(
-			sf::Vector2f(
-				maxPosition.x,
-				minPosition.y),
-			color));
-
-	vertices.append(
-		sf::Vertex(
-			maxPosition,
-			color));
 }
