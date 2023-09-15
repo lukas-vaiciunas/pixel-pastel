@@ -1,24 +1,20 @@
 #include "Canvas.h"
+#include "TextureData.h"
 #include "FreeFunctions.h"
 #include "LodePNG.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 Canvas::Canvas(const sf::Vector2u &size) :
 	sf::Drawable(),
+	transparencyTexture_(TextureData::getInstance().getTexture(1)),
 	outlineVertices_(sf::PrimitiveType::Triangles),
 	transparencyVertices_(sf::PrimitiveType::Triangles),
 	vertices_(sf::PrimitiveType::Triangles),
 	gridVertices_(sf::PrimitiveType::Triangles),
-	transparencyTexture_(),
 	size_(size),
 	cellSize_(8),
 	isGridActive_(false)
 {
-	if (!transparencyTexture_.loadFromFile("./assets/textures/transparency.png"))
-	{
-		fprintf(stderr, "Failed to open \"./assets/textures/transparency.png\" in Canvas::Canvas\n");
-	}
-
 	this->init_();
 }
 

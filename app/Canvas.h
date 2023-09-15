@@ -33,12 +33,12 @@ public:
 	const sf::Vector2u &getSize() const;
 	unsigned int getCellSize() const;
 private:
+	const sf::Texture &transparencyTexture_;
+
 	sf::VertexArray outlineVertices_;
 	sf::VertexArray transparencyVertices_;
 	sf::VertexArray vertices_;
 	sf::VertexArray gridVertices_;
-
-	sf::Texture transparencyTexture_;
 
 	sf::Vector2u size_;
 
