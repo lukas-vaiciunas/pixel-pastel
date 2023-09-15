@@ -52,10 +52,8 @@ namespace FreeFunctions
 		sf::VertexArray &vertices,
 		const sf::Vector2f &minPosition,
 		const sf::Vector2f &maxPosition,
-		const sf::Texture &texture)
+		const sf::Vector2f &textureSize)
 	{
-		const sf::Vector2f textureSize = sf::Vector2f(texture.getSize());
-
 		vertices.append(
 			sf::Vertex(
 				minPosition,

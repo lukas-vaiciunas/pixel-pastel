@@ -212,7 +212,7 @@ void Canvas::initCanvasHelper_(unsigned int x, unsigned int y, const sf::Color &
 		transparencyVertices_,
 		minPosition,
 		maxPosition,
-		transparencyTexture_);
+		sf::Vector2f(transparencyTexture_.getSize()));
 }
 
 void Canvas::initOutline_()
