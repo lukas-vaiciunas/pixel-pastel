@@ -89,10 +89,15 @@ void Canvas::fill(
 	const sf::Vector2u &position,
 	const sf::Color &color)
 {
+	const sf::Color replaceColor = vertices_[static_cast<size_t>(this->spatialHash_(position)) * 6].color;
+
+	if (replaceColor == color)
+	{
+		return;
+	}
+
 	std::queue<sf::Vector2u> queue;
 	std::unordered_set<unsigned int> visitedHashes;
-
-	const sf::Color replaceColor = vertices_[static_cast<size_t>(this->spatialHash_(position)) * 6].color;
 
 	queue.push(position);
 	visitedHashes.emplace(this->spatialHash_(position));
