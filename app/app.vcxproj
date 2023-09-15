@@ -142,6 +142,7 @@
     <ClCompile Include="LodePNG.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Palette.cpp" />
+    <ClCompile Include="Panel.cpp" />
     <ClCompile Include="TextureData.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
@@ -160,6 +161,7 @@
     <ClInclude Include="LodePNG.h" />
     <ClInclude Include="ModifierKeys.h" />
     <ClInclude Include="Palette.h" />
+    <ClInclude Include="Panel.h" />
     <ClInclude Include="TextureData.h" />
     <ClInclude Include="TextureId.h" />
     <ClInclude Include="ThreadPool.h" />
