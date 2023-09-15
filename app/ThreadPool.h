@@ -7,7 +7,13 @@
 class ThreadPool
 {
 public:
-	ThreadPool();
+	ThreadPool(const ThreadPool &) = delete;
+	ThreadPool(ThreadPool &&) = delete;
+
+	ThreadPool &operator=(const ThreadPool &) = delete;
+	ThreadPool &operator=(ThreadPool &&) = delete;
+
+	static ThreadPool &getInstance();
 
 	void start();
 	void push(const std::function<void()> &job);
@@ -21,6 +27,9 @@ private:
 	std::condition_variable mutexCondition_;
 	
 	bool shouldTerminate_;
+
+	ThreadPool();
+	~ThreadPool() {}
 
 	void loop_();
 };

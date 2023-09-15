@@ -8,6 +8,12 @@ ThreadPool::ThreadPool() :
 	shouldTerminate_(false)
 {}
 
+ThreadPool &ThreadPool::getInstance()
+{
+	static ThreadPool instance;
+	return instance;
+}
+
 void ThreadPool::start()
 {
 	const uint32_t numThreads = std::thread::hardware_concurrency();

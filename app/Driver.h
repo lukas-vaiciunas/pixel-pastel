@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ThreadPool.h"
 #include "Canvas.h"
 #include "Brush.h"
 #include "Palette.h"
@@ -24,8 +23,6 @@ public:
 		sf::RenderTarget &target,
 		sf::RenderStates states) const override;
 private:
-	ThreadPool threadPool_;
-
 	Canvas canvas_;
 	Brush brush_;
 	Palette palette_;

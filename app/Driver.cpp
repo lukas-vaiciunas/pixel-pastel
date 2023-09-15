@@ -1,4 +1,5 @@
 #include "Driver.h"
+#include "ThreadPool.h"
 #include "ModifierKeys.h"
 #include "Config.h"
 #include <NFD/nfd.h>
@@ -6,7 +7,6 @@
 
 Driver::Driver() :
 	sf::Drawable(),
-	threadPool_(),
 	canvas_(sf::Vector2u(32, 32)),
 	brush_(),
 	palette_(),
@@ -14,7 +14,7 @@ Driver::Driver() :
 	mousePosition_(0, 0),
 	modifierKeys_(ModifierKeys::None)
 {
-	threadPool_.start();
+	ThreadPool::getInstance().start();
 
 	palette_.load("./palettes/pico-8.txt");
 
@@ -23,7 +23,7 @@ Driver::Driver() :
 
 Driver::~Driver()
 {
-	threadPool_.stop();
+	ThreadPool::getInstance().stop();
 }
 
 void Driver::updateOnMouseMove(int mouseX, int mouseY)
@@ -83,10 +83,10 @@ void Driver::updateOnKeyPress(sf::Keyboard::Key key)
 			canvas_.toggleGrid();
 			break;
 		case sf::Keyboard::Key::S:
-			threadPool_.push(std::bind(&Driver::startSaveDialog_, this));
+			ThreadPool::getInstance().push(std::bind(&Driver::startSaveDialog_, this));
 			break;
 		case sf::Keyboard::Key::L:
-			threadPool_.push(std::bind(&Driver::startOpenDialog_, this));
+			ThreadPool::getInstance().push(std::bind(&Driver::startOpenDialog_, this));
 			break;
 		case sf::Keyboard::Key::LControl:
 		case sf::Keyboard::Key::RControl:
