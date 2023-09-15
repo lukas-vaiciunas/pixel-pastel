@@ -18,6 +18,20 @@ Canvas::Canvas(const sf::Vector2u &size) :
 	this->init_();
 }
 
+Canvas::Canvas(const std::string &filePath) :
+	sf::Drawable(),
+	transparencyTexture_(TextureData::getInstance().getTexture(1)),
+	outlineVertices_(sf::PrimitiveType::Triangles),
+	transparencyVertices_(sf::PrimitiveType::Triangles),
+	vertices_(sf::PrimitiveType::Triangles),
+	gridVertices_(sf::PrimitiveType::Triangles),
+	size_(0, 0),
+	cellSize_(8),
+	isGridActive_(false)
+{
+	this->load(filePath);
+}
+
 void Canvas::draw(
 	sf::RenderTarget &target,
 	sf::RenderStates states) const

@@ -136,6 +136,9 @@
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="Driver.cpp" />
+    <ClCompile Include="DriverInterface.cpp" />
+    <ClCompile Include="DriverState.cpp" />
+    <ClCompile Include="EditDriverState.cpp" />
     <ClCompile Include="EventQueue.cpp" />
     <ClCompile Include="FreeFunctions.cpp" />
     <ClCompile Include="Listener.cpp" />
@@ -143,6 +146,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Palette.cpp" />
     <ClCompile Include="Panel.cpp" />
+    <ClCompile Include="StartDriverState.cpp" />
+    <ClCompile Include="StartInterface.cpp" />
     <ClCompile Include="TextureData.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
@@ -153,6 +158,9 @@
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Driver.h" />
+    <ClInclude Include="DriverInterface.h" />
+    <ClInclude Include="DriverState.h" />
+    <ClInclude Include="EditDriverState.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventQueue.h" />
     <ClInclude Include="EventType.h" />
@@ -162,6 +170,8 @@
     <ClInclude Include="ModifierKeys.h" />
     <ClInclude Include="Palette.h" />
     <ClInclude Include="Panel.h" />
+    <ClInclude Include="StartDriverState.h" />
+    <ClInclude Include="StartInterface.h" />
     <ClInclude Include="TextureData.h" />
     <ClInclude Include="TextureId.h" />
     <ClInclude Include="ThreadPool.h" />

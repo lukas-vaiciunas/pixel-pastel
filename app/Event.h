@@ -2,6 +2,7 @@
 
 #include "EventType.h"
 #include <SFML/Graphics/Color.hpp>
+#include <string>
 
 class Event
 {
@@ -18,6 +19,46 @@ public:
 	}
 private:
 	EventType type_;
+};
+
+class EventEditFromCreate : public Event
+{
+public:
+	EventEditFromCreate() :
+		Event(EventType::EditFromCreate)
+	{}
+};
+
+class EventEditFromLoad : public Event
+{
+public:
+	EventEditFromLoad(const std::string &filePath) :
+		Event(EventType::EditFromLoad),
+		filePath_(filePath)
+	{}
+
+	const std::string &getFilePath() const
+	{
+		return filePath_;
+	}
+private:
+	std::string filePath_;
+};
+
+class EventCreateImage : public Event
+{
+public:
+	EventCreateImage() :
+		Event(EventType::CreateImage)
+	{}
+};
+
+class EventLoadImage : public Event
+{
+public:
+	EventLoadImage() :
+		Event(EventType::LoadImage)
+	{}
 };
 
 class EventSetBrushPrimaryColor : public Event

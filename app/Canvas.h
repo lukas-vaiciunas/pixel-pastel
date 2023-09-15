@@ -9,6 +9,7 @@ class Canvas : public sf::Drawable
 {
 public:
 	Canvas(const sf::Vector2u &size);
+	Canvas(const std::string &filePath);
 
 	void draw(
 		sf::RenderTarget &target,

@@ -10,7 +10,7 @@ int main(void)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 	
-	const sf::Color clearColor = sf::Color(205, 180, 219);
+	const sf::Color clearColor = sf::Color(207, 186, 240);
 
 	sf::RenderWindow window(
 		sf::VideoMode(

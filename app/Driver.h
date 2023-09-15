@@ -1,47 +1,29 @@
 #pragma once
 
-#include "Canvas.h"
-#include "Brush.h"
-#include "Palette.h"
-#include "Camera.h"
+#include "Listener.h"
+#include "DriverState.h"
 
-class Driver : public sf::Drawable
+class Driver :
+	public DriverInterface,
+	public Listener
 {
 public:
 	Driver();
 
 	~Driver();
 
-	void updateOnMouseMove(int mouseX, int mouseY);
-	void updateOnMouseWheelScroll(float delta);
-	void updateOnMouseButtonPress(sf::Mouse::Button button);
-	void updateOnMouseButtonRelease(sf::Mouse::Button button);
-	void updateOnKeyPress(sf::Keyboard::Key key);
-	void updateOnKeyRelease(sf::Keyboard::Key key);
+	void onEvent(const Event &ev) override;
+
+	void updateOnMouseMove(int mouseX, int mouseY) override;
+	void updateOnMouseWheelScroll(float delta) override;
+	void updateOnMouseButtonPress(sf::Mouse::Button button) override;
+	void updateOnMouseButtonRelease(sf::Mouse::Button button) override;
+	void updateOnKeyPress(sf::Keyboard::Key key) override;
+	void updateOnKeyRelease(sf::Keyboard::Key key) override;
 
 	void draw(
 		sf::RenderTarget &target,
 		sf::RenderStates states) const override;
 private:
-	Canvas canvas_;
-	Brush brush_;
-	Palette palette_;
-	Camera camera_;
-
-	uint8_t modifierKeys_;
-
-	sf::Vector2i mousePosition_;
-
-	void resetCamera_();
-
-	void startOpenDialog_();
-	void startSaveDialog_();
-
-	void drawCameraTransform_(
-		sf::RenderTarget &target,
-		sf::RenderStates states) const;
-
-	void drawInterfaceTransform_(
-		sf::RenderTarget &target,
-		sf::RenderStates states) const;
+	DriverState *state_;
 };
