@@ -10,6 +10,12 @@ namespace FreeFunctions
 		const sf::Vector2f &maxPosition,
 		const sf::Color &color);
 
+	void addTextureQuad(
+		sf::VertexArray &vertices,
+		const sf::Vector2f &minPosition,
+		const sf::Vector2f &maxPosition,
+		const sf::Texture &texture);
+
 	void addOutline(
 		sf::VertexArray &vertices,
 		const sf::Vector2f &minPosition,

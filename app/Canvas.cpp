@@ -198,59 +198,25 @@ void Canvas::initCanvasHelper_(unsigned int x, unsigned int y, const sf::Color &
 {
 	const float cellSize = static_cast<float>(cellSize_);
 
-	const sf::Vector2f pixelPosition(
+	const sf::Vector2f minPosition(
 		x * cellSize,
 		y * cellSize);
 
+	const sf::Vector2f maxPosition(
+		minPosition.x + cellSize,
+		minPosition.y + cellSize);
+
 	FreeFunctions::addQuad(
 		vertices_,
-		pixelPosition,
-		sf::Vector2f(pixelPosition.x + cellSize, pixelPosition.y + cellSize),
+		minPosition,
+		maxPosition,
 		color);
 
-	// Transparency
-
-	transparencyVertices_.append(
-		sf::Vertex(
-			sf::Vector2f(
-				pixelPosition.x,
-				pixelPosition.y),
-			sf::Vector2f(0.0f, 0.0f)));
-
-	transparencyVertices_.append(
-		sf::Vertex(
-			sf::Vector2f(
-				pixelPosition.x + cellSize,
-				pixelPosition.y),
-			sf::Vector2f(cellSize, 0.0f)));
-
-	transparencyVertices_.append(
-		sf::Vertex(
-			sf::Vector2f(
-				pixelPosition.x,
-				pixelPosition.y + cellSize),
-			sf::Vector2f(0.0f, cellSize)));
-
-	transparencyVertices_.append(
-		sf::Vertex(
-			sf::Vector2f(
-				pixelPosition.x,
-				pixelPosition.y + cellSize),
-			sf::Vector2f(0.0f, cellSize)));
-
-	transparencyVertices_.append(
-		sf::Vertex(
-			sf::Vector2f(
-				pixelPosition.x + cellSize,
-				pixelPosition.y),
-			sf::Vector2f(cellSize, 0.0f)));
-
-	transparencyVertices_.append(
-		sf::Vertex(
-			sf::Vector2f(
-				pixelPosition.x + cellSize,
-				pixelPosition.y + cellSize),
-			sf::Vector2f(cellSize, cellSize)));
+	FreeFunctions::addTextureQuad(
+		transparencyVertices_,
+		minPosition,
+		maxPosition,
+		transparencyTexture_);
 }
 
 void Canvas::initOutline_()

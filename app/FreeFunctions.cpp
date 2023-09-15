@@ -1,4 +1,5 @@
 #include "FreeFunctions.h"
+#include <SFML/Graphics/Texture.hpp>
 
 namespace FreeFunctions
 {
@@ -45,6 +46,53 @@ namespace FreeFunctions
 			sf::Vertex(
 				maxPosition,
 				color));
+	}
+
+	void addTextureQuad(
+		sf::VertexArray &vertices,
+		const sf::Vector2f &minPosition,
+		const sf::Vector2f &maxPosition,
+		const sf::Texture &texture)
+	{
+		const sf::Vector2f textureSize = sf::Vector2f(texture.getSize());
+
+		vertices.append(
+			sf::Vertex(
+				minPosition,
+				sf::Vector2f(0.0f, 0.0f)));
+
+		vertices.append(
+			sf::Vertex(
+				sf::Vector2f(
+					maxPosition.x,
+					minPosition.y),
+				sf::Vector2f(textureSize.x, 0.0f)));
+
+		vertices.append(
+			sf::Vertex(
+				sf::Vector2f(
+					minPosition.x,
+					maxPosition.y),
+				sf::Vector2f(0.0f, textureSize.y)));
+
+		vertices.append(
+			sf::Vertex(
+				sf::Vector2f(
+					minPosition.x,
+					maxPosition.y),
+				sf::Vector2f(0.0f, textureSize.y)));
+
+		vertices.append(
+			sf::Vertex(
+				sf::Vector2f(
+					maxPosition.x,
+					minPosition.y),
+				sf::Vector2f(textureSize.x, 0.0f)));
+
+		vertices.append(
+			sf::Vertex(
+				maxPosition,
+				sf::Vector2f(textureSize.x, textureSize.y)));
 	}
 
 	void addOutline(
