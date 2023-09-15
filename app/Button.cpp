@@ -4,14 +4,13 @@
 #include "Config.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 
-Button::Button(const sf::Vector2f &size, TextureId iconTextureId)
+Button::Button(
+	const sf::Vector2f &size,
+	const sf::Color &fillColor,
+	TextureId iconTextureId)
 	:
-	sf::Drawable(),
-	sf::Transformable(),
+	Panel(size, fillColor),
 	texture_(TextureData::getInstance().getTexture(iconTextureId)),
-	size_(size),
-	panelVertices_(sf::PrimitiveType::Triangles),
-	outlineVertices_(sf::PrimitiveType::Triangles),
 	iconVertices_(sf::PrimitiveType::Triangles),
 	isHovered_(false)
 {
@@ -38,19 +37,12 @@ void Button::draw(
 	sf::RenderTarget &target,
 	sf::RenderStates states) const
 {
+	Panel::draw(target, states);
+
 	states.transform *= this->getTransform();
-
-	target.draw(outlineVertices_, states);
-	target.draw(panelVertices_, states);
-
 	states.texture = &texture_;
 
 	target.draw(iconVertices_, states);
-}
-
-void Button::setCenterPosition(const sf::Vector2f &position)
-{
-	this->setPosition(position - size_ * 0.5f);
 }
 
 bool Button::isHovered() const
@@ -59,36 +51,6 @@ bool Button::isHovered() const
 }
 
 void Button::init_()
-{
-	this->initPanel_();
-	this->initOutline_();
-	this->initIcon_();
-}
-
-void Button::initPanel_()
-{
-	panelVertices_.clear();
-
-	FreeFunctions::addQuad(
-		panelVertices_,
-		sf::Vector2f(0.0f, 0.0f),
-		size_,
-		sf::Color(207, 186, 240));
-}
-
-void Button::initOutline_()
-{
-	outlineVertices_.clear();
-
-	FreeFunctions::addOutline(
-		outlineVertices_,
-		sf::Vector2f(0.0f, 0.0f),
-		size_,
-		sf::Color(0, 0, 0),
-		2.0f);
-}
-
-void Button::initIcon_()
 {
 	iconVertices_.clear();
 

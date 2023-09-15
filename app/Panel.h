@@ -8,18 +8,22 @@ class Panel :
 	public sf::Transformable
 {
 public:
-	Panel(const sf::Vector2f &size);
+	Panel(
+		const sf::Vector2f &size,
+		const sf::Color &fillColor);
 
-	void draw(
+	virtual ~Panel() {}
+
+	virtual void draw(
 		sf::RenderTarget &target,
 		sf::RenderStates states) const override;
 
 	void setCenterPosition(const sf::Vector2f &position);
-private:
+protected:
 	sf::VertexArray vertices_;
 	sf::VertexArray outlineVertices_;
 
 	sf::Vector2f size_;
 
-	void init_();
+	void init_(const sf::Color &fillColor);
 };

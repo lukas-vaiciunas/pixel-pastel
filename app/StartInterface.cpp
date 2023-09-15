@@ -9,16 +9,18 @@ StartInterface::StartInterface(
 	const sf::Vector2f &size)
 	:
 	sf::Drawable(),
-	panel_(size),
+	panel_(size, sf::Color(236, 236, 236)),
 	createButton_(
 		sf::Vector2f(
 			Config::Window::width * 0.2f,
 			Config::Window::height * 0.2f) / Config::Interface::scale,
+		sf::Color(207, 186, 240),
 		101),
 	loadButton_(
 		sf::Vector2f(
 			Config::Window::width * 0.2f,
 			Config::Window::height * 0.2f) / Config::Interface::scale,
+		sf::Color(207, 186, 240),
 		102)
 {
 	panel_.setCenterPosition(centerPosition);

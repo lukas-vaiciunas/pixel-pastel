@@ -2,14 +2,17 @@
 #include "FreeFunctions.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 
-Panel::Panel(const sf::Vector2f &size) :
+Panel::Panel(
+	const sf::Vector2f &size,
+	const sf::Color &fillColor)
+	:
 	sf::Drawable(),
 	sf::Transformable(),
 	vertices_(sf::PrimitiveType::Triangles),
 	outlineVertices_(sf::PrimitiveType::Triangles),
 	size_(size)
 {
-	this->init_();
+	this->init_(fillColor);
 }
 
 void Panel::draw(
@@ -27,7 +30,7 @@ void Panel::setCenterPosition(const sf::Vector2f &position)
 	this->setPosition(position - size_ * 0.5f);
 }
 
-void Panel::init_()
+void Panel::init_(const sf::Color &fillColor)
 {
 	vertices_.clear();
 	outlineVertices_.clear();
@@ -36,7 +39,7 @@ void Panel::init_()
 		vertices_,
 		sf::Vector2f(0.0f, 0.0f),
 		size_,
-		sf::Color(236, 236, 236));
+		fillColor);
 
 	FreeFunctions::addOutline(
 		outlineVertices_,
