@@ -115,22 +115,24 @@ void Palette::load(const std::string &string)
 
 		const sf::Color color(r, g, b);
 
-		const sf::Vector2f position(
+		const sf::Vector2f minPosition(
 			boxGap_ + col * boxOffset,
 			boxGap_ + row * boxOffset);
 
+		const sf::Vector2f maxPosition(
+			minPosition.x + boxSize_,
+			minPosition.y + boxSize_);
+
 		FreeFunctions::addQuad(
 			vertices_,
-			position,
-			sf::Vector2f(
-				position.x + boxSize_,
-				position.y + boxSize_),
+			minPosition,
+			maxPosition,
 			color);
 
 		FreeFunctions::addOutline(
 			outlineVertices_,
-			position,
-			sf::Vector2f(position.x + boxSize_, position.y + boxSize_),
+			minPosition,
+			maxPosition,
 			outlineColor,
 			outlineThickness);
 

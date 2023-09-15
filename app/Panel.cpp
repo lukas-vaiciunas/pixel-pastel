@@ -35,15 +35,17 @@ void Panel::init_(const sf::Color &fillColor)
 	vertices_.clear();
 	outlineVertices_.clear();
 
+	const sf::Vector2f minPosition(0.0f, 0.0f);
+
 	FreeFunctions::addQuad(
 		vertices_,
-		sf::Vector2f(0.0f, 0.0f),
+		minPosition,
 		size_,
 		fillColor);
 
 	FreeFunctions::addOutline(
 		outlineVertices_,
-		sf::Vector2f(0.0f, 0.0f),
+		minPosition,
 		size_,
 		sf::Color(0, 0, 0),
 		2.0f);
